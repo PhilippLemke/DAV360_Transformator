@@ -37,10 +37,10 @@ if __name__ == '__main__':
     SeasonID = Season+''+str(ProgramYear)
     print('SeasonID: '+SeasonID)
     if useSeperateFiles:
-        outFileTouren = 'TAK_GruppenexportTouren_'+SeasonID+'.xlsx'
-        outFileEvents = 'TAK_GruppenexportEvents_'+SeasonID+'.xlsx'
+        outFileTouren = 'DAV_GruppenexportTouren_'+SeasonID+'.xlsx'
+        outFileEvents = 'DAV_GruppenexportEvents_'+SeasonID+'.xlsx'
     else:
-        outFileTouren = 'TAK_GruppenexportEventsTouren_'+SeasonID+'.xlsx'
+        outFileTouren = 'DAV_GruppenexportEventsTouren_'+SeasonID+'.xlsx'
 
     #
     # write Output by OpenPYXL

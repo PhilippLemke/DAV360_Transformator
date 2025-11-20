@@ -152,10 +152,8 @@ def getLeaders(LeadersTxt):
         .replace("Dr. med.", "").replace("Dr.med.", "").replace("Dr.", "")
     Leaders = LeadersTxt.split(',')
     for leader in Leaders:
-        leader = leader.strip()
-        leaderCor = leader
-        if leader == "Eri Köhnke":
-            leaderCor = "Erika Köhnke"
+        leaderCor = leader.strip()
+        # Spezifische Umschlüsselungen für einige Namen können hier eingefügt werden. Z.b Manche tragen ihren Spitznamen ein.
         tf = getTourenfuehrer(leaderCor)
         if tf is None:
             print(f"ERROR: Tourenführer {leader} ist nicht in der Liste bekannter Tourenführer. (tried: {leaderCor})")

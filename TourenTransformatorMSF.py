@@ -32,7 +32,7 @@ if __name__ == '__main__':
         ProgramYear = (datetime.today().year) +1    # Winterprogramm wird für das Folgejahr erstellt
     SeasonID = Season+''+str(ProgramYear)
     print('SeasonID: ' + SeasonID)
-    outFile = 'TAK_Tourenexport_'+SeasonID+'.xlsx'
+    outFile = 'DAV_Tourenexport_'+SeasonID+'.xlsx'
 
     #
     # write Output by OpenPYXL
