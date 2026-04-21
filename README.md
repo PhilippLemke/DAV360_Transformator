@@ -10,3 +10,12 @@ Viele Attribute werden in DAV360 über IDs referneziert, die Zuordnung zwischen 
 - Es waren bei einem Import ID-Pfade doppelt, daher konnte es nicht importiert werden.
 - Beim Import durch DAV des Winterporgramms kam es 2024 zu einem Fehler dass die Uhrzeiten um 1h falsch waren, vermutlich weil in dem Zeitbereich die Uhrumstellung war, 2025 habe ich darauf hingwewiesen und es hat alles gepasst.
 
+# Transformator starten
+## Github Repository auf dem eigenen Rechner auschecken / clonen
+```bash
+git clone https://github.com/PhilippLemke/DAV360_Transformator.git
+```
+## In das Verzeichnis wechseln und Transformator starten
+```bash
+./TourenTransformatorMSF.py "Toureneingabe.xlsx
+```
