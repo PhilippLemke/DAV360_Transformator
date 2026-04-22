@@ -11,11 +11,52 @@ Viele Attribute werden in DAV360 über IDs referneziert, die Zuordnung zwischen 
 - Beim Import durch DAV des Winterporgramms kam es 2024 zu einem Fehler dass die Uhrzeiten um 1h falsch waren, vermutlich weil in dem Zeitbereich die Uhrumstellung war, 2025 habe ich darauf hingwewiesen und es hat alles gepasst.
 
 # Transformator starten
-## Github Repository auf dem eigenen Rechner auschecken / clonen
+
+## Voraussetzungen
+- Python 3.7 oder höher
+
+## Setup
+
+### 1. Github Repository auf dem eigenen Rechner auschecken / clonen
 ```bash
 git clone https://github.com/PhilippLemke/DAV360_Transformator.git
+cd DAV360_Transformator
 ```
-## In das Verzeichnis wechseln und Transformator starten
+
+### 2. Virtuelle Python-Umgebung erstellen
 ```bash
-./TourenTransformatorMSF.py "Toureneingabe.xlsx
+python3 -m venv venv
+```
+
+### 3. Virtuelle Umgebung aktivieren
+#### macOS / Linux:
+```bash
+source venv/bin/activate
+```
+
+#### Windows:
+```bash
+venv\Scripts\activate
+```
+
+### 4. Abhängigkeiten installieren
+```bash
+pip install -r requirements.txt
+```
+
+## Transformator ausführen
+
+```bash
+python TourenTransformatorMSF.py "Toureneingabe.xlsx"
+```
+
+oder für Gruppenveranstaltungen:
+
+```bash
+python GruppenTransformatorMSF.py "TAK Gruppen Eingabeformular.xlsx"
+```
+
+## Virtuelle Umgebung deaktivieren
+```bash
+deactivate
 ```
