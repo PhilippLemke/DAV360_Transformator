@@ -13,11 +13,15 @@ Viele Attribute werden in DAV360 über IDs referneziert, die Zuordnung zwischen 
 # Transformator starten
 
 ## Voraussetzungen
+- Git Installiert für Windows z.B. hier downloaden https://git-scm.com/install/windows
 - Python 3.7 oder höher
+
 
 ## Setup
 
 ### 1. Github Repository auf dem eigenen Rechner auschecken / clonen
+Eingabeaufforderung / CMD Terminal öffnen und folgenden Befehle eingeben:
+
 ```bash
 git clone https://github.com/PhilippLemke/DAV360_Transformator.git
 cd DAV360_Transformator
@@ -46,8 +50,9 @@ pip install -r requirements.txt
 
 ## Transformator ausführen
 
+Beispiel für Touren:
 ```bash
-python TourenTransformatorMSF.py "Toureneingabe.xlsx"
+python TourenTransformatorMSF.py "dummy_daten\TAK_Touren.xlsx"
 ```
 
 oder für Gruppenveranstaltungen:
