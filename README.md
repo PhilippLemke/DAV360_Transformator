@@ -1,9 +1,12 @@
 # DAV360_Transformator
 -> Dieses Repository basiert auf einem Fork von matmuc/DAV360_Transformator
 
-Konvertiere Touren und Gruppenveranstaltungen für den Import in DAV360
+Konvertiere Touren und Gruppenveranstaltungen für den Import in DAV360 PIMCORE Redaktionstool.
 
-Die Inputdateien werden bei uns durch zwei Microsoft&reg; Forms&trade; Formulare erzeugt, in die die Touren und Veranstaltungen eingetragen werden.
+Das System unterscheidet zwischen Touren, Veranstaltungen und Kursen.
+
+# Input
+Die Inputdateien können z.B. durch Microsoft&reg; Forms&trade; Formulare erzeugt werden, in die die Touren und Veranstaltungen eingetragen werden.
 Es wird dabei zwischen "normalen" Touren und Touren durch Gruppen unterschieden. Gruppen haben zudem auch Veranstaltungen, die ein anderes Format haben.
 
 Viele Attribute werden in DAV360 über IDs referneziert, die Zuordnung zwischen IDs und Werten ist in der Datei keys.xlsx. Diese muss Sektionsspezifisch angepasst werden.
