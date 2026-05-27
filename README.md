@@ -52,7 +52,7 @@ pip install -r requirements.txt
 
 Beispiel für Touren:
 ```bash
-python TourenTransformatorMSF.py "dummy_daten\TAK_Touren.xlsx"
+python TourenTransformatorMSF.py dummy_daten/TAK_Touren.xlsx
 ```
 
 oder für Gruppenveranstaltungen:
