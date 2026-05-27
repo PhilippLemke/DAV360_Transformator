@@ -126,10 +126,7 @@ if __name__ == "__main__":
         Dauer = str(inFormRow["Dauer"])
         Beschreibung = str(inFormRow["Beschreibung"])
         sheetOut.cell(row=ri, column=ColumnsVeranstaltungen["description"]).value = (
-        #     TakExcelTransformLib.makeHTML(        #das hier funktioniert leider noch nicht, er fragt ob ein Komma vergessen wurde...
-        #         Beschreibung + "Profil: " + Profil + ", Dauer: " + Dauer
-        #     )
-            TakExcelTransformLib.makeHTML(inFormRow["Beschreibung"])
+            TakExcelTransformLib.makeHTML(Beschreibung + " Profil: " + Profil + ", Dauer: " + Dauer)
         )
         sheetOut.cell(row=ri, column=ColumnsVeranstaltungen["Termine"]).value = (
             TakExcelTransformLib.getDates(date, time)
