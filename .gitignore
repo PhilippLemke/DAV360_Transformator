@@ -1,3 +1,6 @@
+# Exports
+export/*.xlsx
+
 # Python virtual environment
 venv/
 env/
