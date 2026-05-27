@@ -3,7 +3,7 @@
 # Berenike Meyer, Mai 2026
 # GNU General Public License v3.0
 
-# Transformiert eine "DAV-Trier Eingabeformular Wanderungen - eintägig.xlsx" bzw. 
+# Transformiert eine "DAV-Trier Eingabeformular Wanderungen - eintägig.xlsx" bzw.
 # übergebene Excel Datei von Microsoft-Forms in das Format für den Pimcore Import (PimcoreOut.xlsx)
 # Es müssen die Spalten Lfd-Nr. und Kategorie (Zeilen immer Veranstaltung) ergänzt werden
 # benötigt dazu auch die Datei Keys.xlsx die die Umschlüsselungen enthält.
@@ -39,7 +39,8 @@ if __name__ == "__main__":
         ) + 1  # Winterprogramm wird für das Folgejahr erstellt
     SeasonID = Season + "" + str(ProgramYear)
     print("SeasonID: " + SeasonID)
-    outFile = "DAV_Veranstaltungsexport_" + SeasonID + ".xlsx"
+    outDir = "export" if os.path.isdir("export") else "."
+    outFile = os.path.join(outDir, "DAV_Veranstaltungsexport_" + SeasonID + ".xlsx")
 
     #
     # write Output by OpenPYXL
@@ -95,10 +96,12 @@ if __name__ == "__main__":
         date = inFormRow["Termin (Datum)"]
         time = inFormRow["Startzeit (bitte angeben im Format HH:MM)"]
         # enddate = inFormRow["Termin (Ende)"]
-        print(f"Processing Veranstaltung: {titel}, von {date} ") # hier {kategorie}: vor {titel} un bis {enddate} nach {date} gelöscht
+        print(
+            f"Processing Veranstaltung: {titel}, von {date} "
+        )  # hier {kategorie}: vor {titel} un bis {enddate} nach {date} gelöscht
         # Anmeldeschluss = inFormRow["Anmeldeschluss"]
         sheetOut.cell(row=ri, column=ColumnsVeranstaltungen["key"]).value = (
-            TakExcelTransformLib.getKey(titel, inFormRow["Kategorie"], date) 
+            TakExcelTransformLib.getKey(titel, inFormRow["Kategorie"], date)
         )
         # sheetOut.cell(row=ri, column=ColumnsVeranstaltungen['assignedGroups']).value = '/264 - Sektion Trier/Gruppen/Allgemein'
         sheetOut.cell(row=ri, column=ColumnsVeranstaltungen["assignedGroups"]).value = (
@@ -106,9 +109,9 @@ if __name__ == "__main__":
         )
         # sheetOut.cell(row=ri, column=Columns['bookingCode']).value = getBookingcode(row['Titel'],row['Kategorie'],date)
         # sheetOut.cell(row=ri, column=ColumnsVeranstaltungen['bookingCode']).value = 'T' + str(ProgramYear) + '_' + str(inFormRow['ID'])
-        sheetOut.cell(row=ri, column=ColumnsVeranstaltungen["bookingCode"]).value = inFormRow[
-            "Lfd-Nr."
-        ]
+        sheetOut.cell(row=ri, column=ColumnsVeranstaltungen["bookingCode"]).value = (
+            inFormRow["Lfd-Nr."]
+        )
         sheetOut.cell(row=ri, column=ColumnsVeranstaltungen["title"]).value = titel
         # sheetOut.cell(row=ri, column=ColumnsVeranstaltungen["category"]).value = (
         #     TakExcelTransformLib.Kategorie[kategorie]
@@ -124,16 +127,16 @@ if __name__ == "__main__":
         Beschreibung = str(inFormRow["Beschreibung"])
         sheetOut.cell(row=ri, column=ColumnsVeranstaltungen["description"]).value = (
         #     TakExcelTransformLib.makeHTML(        #das hier funktioniert leider noch nicht, er fragt ob ein Komma vergessen wurde...
-        #         Beschreibung + "Profil: " + Profil + ", Dauer: " + Dauer 
+        #         Beschreibung + "Profil: " + Profil + ", Dauer: " + Dauer
         #     )
             TakExcelTransformLib.makeHTML(inFormRow["Beschreibung"])
         )
         sheetOut.cell(row=ri, column=ColumnsVeranstaltungen["Termine"]).value = (
             TakExcelTransformLib.getDates(date, time)
         )
-        sheetOut.cell(row=ri, column=ColumnsVeranstaltungen["datesAlternativeText"]).value = (
-            "<p>&nbsp;</p>"
-        )
+        sheetOut.cell(
+            row=ri, column=ColumnsVeranstaltungen["datesAlternativeText"]
+        ).value = "<p>&nbsp;</p>"
         sheetOut.cell(row=ri, column=ColumnsVeranstaltungen["leaders"]).value = (
             TakExcelTransformLib.getLeaders(inFormRow["Leitung/Organisation"])
         )

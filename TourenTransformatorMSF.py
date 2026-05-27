@@ -36,7 +36,8 @@ if __name__ == "__main__":
         ) + 1  # Winterprogramm wird für das Folgejahr erstellt
     SeasonID = Season + "" + str(ProgramYear)
     print("SeasonID: " + SeasonID)
-    outFile = "DAV_Tourenexport_" + SeasonID + ".xlsx"
+    outDir = "export" if os.path.isdir("export") else "."
+    outFile = os.path.join(outDir, "DAV_Tourenexport_" + SeasonID + ".xlsx")
 
     #
     # write Output by OpenPYXL
