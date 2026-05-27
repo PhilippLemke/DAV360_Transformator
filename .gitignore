@@ -1,6 +1,9 @@
 # Exports
 export/*.xlsx
 
+# Office temporary files
+~$*
+
 # Python virtual environment
 venv/
 env/
