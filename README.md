@@ -1,4 +1,6 @@
 # DAV360_Transformator
+-> Dieses Repository basiert auf einem Fork von matmuc/DAV360_Transformator
+
 Konvertiere Touren und Gruppenveranstaltungen für den Import in DAV360
 
 Die Inputdateien werden bei uns durch zwei Microsoft&reg; Forms&trade; Formulare erzeugt, in die die Touren und Veranstaltungen eingetragen werden.
