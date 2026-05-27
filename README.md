@@ -50,16 +50,24 @@ pip install -r requirements.txt
 
 ## Transformator ausführen
 
-Beispiel für Touren:
+Beispiel für 
+### Touren:
 ```bash
 python TourenTransformatorMSF.py dummy_daten/TAK_Touren.xlsx
 ```
+### Veranstaltungen:
+```bash
+python VeranstaltungsTransformatorMSF.py dummy_daten/DAV-Trier_Eingabeformular_Wanderungen_eintaegig.xlsx
+```
 
-oder für Gruppenveranstaltungen:
+### Gruppenveranstaltungen:
 
 ```bash
 python GruppenTransformatorMSF.py "TAK Gruppen Eingabeformular.xlsx"
 ```
+## Exportierte Dateien
+Diese werden automatisch im  Ordner 📂 export abglegt.
+
 
 ## Virtuelle Umgebung deaktivieren
 ```bash
