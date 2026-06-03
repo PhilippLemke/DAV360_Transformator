@@ -126,7 +126,11 @@ if __name__ == "__main__":
         Dauer = str(inFormRow["Dauer"])
         Beschreibung = str(inFormRow["Beschreibung"])
         sheetOut.cell(row=ri, column=ColumnsVeranstaltungen["description"]).value = (
-            TakExcelTransformLib.makeHTML(Beschreibung + " Profil: " + Profil + ", Dauer: " + Dauer)
+            TakExcelTransformLib.makeHTML(Beschreibung 
+            + "\nProfil: " 
+            + Profil 
+            + "\nDauer: " 
+            + Dauer)
         )
         sheetOut.cell(row=ri, column=ColumnsVeranstaltungen["Termine"]).value = (
             TakExcelTransformLib.getDates(date, time)
@@ -177,6 +181,16 @@ if __name__ == "__main__":
         # sheetOut.cell(
         #     row=ri, column=ColumnsVeranstaltungen["isPublicTransportAvailable"]
         # ).value = TakExcelTransformLib.getEinsNull(inFormRow["Öffentliche Anreise"])
+        sheetOut.cell(row=ri, column=ColumnsVeranstaltungen["teaserImage"]).value = (
+            TakExcelTransformLib.getLeaders(inFormRow["Leitung/Organisation"])
+        )
+        sheetOut.cell(row=ri, column=ColumnsVeranstaltungen["registration"]).value = (
+            TakExcelTransformLib.makeHTML(inFormRow["Bemerkungen"])
+        )
+        sheetOut.cell(row=ri, column=ColumnsVeranstaltungen["teaserImage"]).value = (
+            TakExcelTransformLib.Gruppen[gruppe].get("image_path", "")
+        )
+
         ri = ri + 1
     wbOut.save(outFile)
     print("wrote: " + outFile)
