@@ -132,14 +132,35 @@ if __name__ == "__main__":
         sheetOut.cell(row=ri, column=ColumnsTouren["description"]).value = (
             TakExcelTransformLib.makeHTML(inFormRow["Beschreibung"])
         )
+        # sheetOut.cell(row=ri, column=ColumnsTouren["altitude"]).value = (
+        #     TakExcelTransformLib.makeHTML(inFormRow["Höhenmeter (in Metern)"])
+        # )
         sheetOut.cell(row=ri, column=ColumnsTouren["altitude"]).value = (
-            TakExcelTransformLib.makeHTML(inFormRow["Höhenmeter (in Metern)"])
+            TakExcelTransformLib.getNumbersFromString(
+                str(inFormRow["Höhenmeter (in Metern)"]),
+                "Höhenmeter",
+                False
+                )
         )
+        # sheetOut.cell(row=ri, column=ColumnsTouren["distance"]).value = (
+        #     TakExcelTransformLib.makeHTML(inFormRow["Strecke (in Kilometern)"])
+        # )
         sheetOut.cell(row=ri, column=ColumnsTouren["distance"]).value = (
-            TakExcelTransformLib.makeHTML(inFormRow["Strecke (in Kilometern)"])
+            TakExcelTransformLib.getNumbersFromString(
+                str(inFormRow["Strecke (in Kilometern)"]),
+                "Strecke",
+                False
+                )
         )
+        # sheetOut.cell(row=ri, column=ColumnsTouren["stageDuration"]).value = (
+        #     TakExcelTransformLib.makeHTML(inFormRow["Etappendauer (in Stunden)"])
+        # )
         sheetOut.cell(row=ri, column=ColumnsTouren["stageDuration"]).value = (
-            TakExcelTransformLib.makeHTML(inFormRow["Etappendauer (in Stunden)"])
+            TakExcelTransformLib.getNumbersFromString(
+                str(inFormRow["Etappendauer (in Stunden)"]),
+                "Etappendauer",
+                False
+                )
         )
         sheetOut.cell(row=ri, column=ColumnsTouren["requirements"]).value = (
             TakExcelTransformLib.makeHTML(inFormRow["Voraussetzungen"])
