@@ -217,6 +217,16 @@ if __name__ == "__main__":
         sheetOut.cell(
             row=ri, column=ColumnsTouren["isPublicTransportAvailable"]
         ).value = TakExcelTransformLib.getEinsNull(inFormRow["Öffentliche Anreise"])
+        
+        Preis = str(inFormRow["Preis"])
+        sheetOut.cell(row=ri, column=ColumnsTouren["prices"]).value = (
+            TakExcelTransformLib.makeHTML(
+                "Mitglieder: " 
+                + Preis 
+                + "\n"
+                + "Die Kosten für Anreise, Unterkunft und Verpflegung muss jeder Teilnehmer selbst tragen. Die Teilnehmer eines außerhalb der Region stattfindenden Ausbildungskurses oder einer Ausbildungstour ermöglichen dem Kursleiter bzw. weiteren Ausbildern eine kostenfreie An- und Abreise. Einzelheiten sind mit dem Kursleiter zu klären."
+            )
+        )
         ri = ri + 1
     wbOut.save(outFile)
     print("wrote: " + outFile)
