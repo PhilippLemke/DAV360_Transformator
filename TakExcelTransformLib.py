@@ -12,7 +12,7 @@ from datetime import datetime
 def readTechnik():
     global Technik
     Technik = {}
-    df = pandas.read_excel('Keys.xlsx', 'Technik')
+    df = pandas.read_excel("Keys.xlsx", "Technik")
     for sID, name in df.values:
         Technik[name] = sID
 
@@ -22,7 +22,7 @@ def readKategorie():
     Kategorie = {}
     global KategorieShort
     KategorieShort = {}
-    df = pandas.read_excel('Keys.xlsx', 'Kategorie')
+    df = pandas.read_excel("Keys.xlsx", "Kategorie")
     for sID, name, sc in df.values:
         Kategorie[name] = sID
         KategorieShort[name] = sc
@@ -31,7 +31,7 @@ def readKategorie():
 def readAusdauer():
     global Ausdauer
     Ausdauer = {}
-    df = pandas.read_excel('Keys.xlsx', 'Ausdauer')
+    df = pandas.read_excel("Keys.xlsx", "Ausdauer")
     for sID, name in df.values:
         Ausdauer[name] = sID
 
@@ -39,7 +39,7 @@ def readAusdauer():
 def readSaison():
     global Saison
     Saison = {}
-    df = pandas.read_excel('Keys.xlsx', 'Saison')
+    df = pandas.read_excel("Keys.xlsx", "Saison")
     for sID, name in df.values:
         Saison[name] = sID
 
@@ -47,7 +47,7 @@ def readSaison():
 def readEventart():
     global Eventart
     Eventart = {}
-    df = pandas.read_excel('Keys.xlsx', 'Eventart')
+    df = pandas.read_excel("Keys.xlsx", "Eventart")
     for sID, name in df.values:
         Eventart[name] = sID
 
@@ -55,7 +55,7 @@ def readEventart():
 def readKlassifizierung():
     global Klassifizierung
     Klassifizierung = {}
-    df = pandas.read_excel('Keys.xlsx', 'Klassifizierung')
+    df = pandas.read_excel("Keys.xlsx", "Klassifizierung")
     for sID, name in df.values:
         Klassifizierung[name] = sID
 
@@ -63,30 +63,30 @@ def readKlassifizierung():
 def readTourenfuehrer():
     global Tourenfuehrer
     Tourenfuehrer = {}
-    df = pandas.read_excel('Keys.xlsx', 'Tourenführer')
+    df = pandas.read_excel("Keys.xlsx", "Tourenführer")
     for ID, fullpath, firstName, lastName in df.values:
-        name = firstName + ' ' + lastName
+        name = firstName + " " + lastName
         Tourenfuehrer[name] = {}
-        Tourenfuehrer[name]['ID'] = ID
-        Tourenfuehrer[name]['name'] = name
-        Tourenfuehrer[name]['fullpath'] = fullpath
-        Tourenfuehrer[name]['firstName'] = firstName
-        Tourenfuehrer[name]['lastName'] = lastName
+        Tourenfuehrer[name]["ID"] = ID
+        Tourenfuehrer[name]["name"] = name
+        Tourenfuehrer[name]["fullpath"] = fullpath
+        Tourenfuehrer[name]["firstName"] = firstName
+        Tourenfuehrer[name]["lastName"] = lastName
 
 
 def readGruppen():
     global Gruppen
     Gruppen = {}
-    df = pandas.read_excel('Keys.xlsx', 'Gruppen')
-    for Gruppe, fullpath, ShortCode in df.values:
+    df = pandas.read_excel("Keys.xlsx", "Gruppen")
+    for Gruppe, fullpath, ShortCode in df.iloc[:, :3].values:
         Gruppen[Gruppe] = {}
-        Gruppen[Gruppe]['fullpath'] = fullpath
-        Gruppen[Gruppe]['ShortCode'] = ShortCode
+        Gruppen[Gruppe]["fullpath"] = fullpath
+        Gruppen[Gruppe]["ShortCode"] = ShortCode
 
 
 def getTourenfuehrer(Name):
     for tf in Tourenfuehrer:
-        if Tourenfuehrer[tf]['name'] == Name:
+        if Tourenfuehrer[tf]["name"] == Name:
             return Tourenfuehrer[tf]
     return None
 
@@ -110,10 +110,10 @@ def getKeyGroups(Titel, Gruppe, Datum):
 
 def getBookingcode(Titel, Kategorie, Datum):
     Titel = Titel.replace(" ", "")
-    if (Kategorie == 'Trailrunning / Berglauf'):
-        Kategorie = 'Trailrunning'
-    if (Kategorie == 'Senior*innen'):
-        Kategorie = 'Senioren'
+    if Kategorie == "Trailrunning / Berglauf":
+        Kategorie = "Trailrunning"
+    if Kategorie == "Senior*innen":
+        Kategorie = "Senioren"
     return Datum.strftime("%y%m%d") + "_" + Kategorie + "_" + Titel
 
 
@@ -127,9 +127,21 @@ def getDatefromStr(datestr: str) -> datetime:
 
 def getDates(Termin1, Termin2):
     try:
-        return '[dates]' + Termin1.strftime("%Y-%m-%d") + ' 00:00:00 bis ' + Termin2.strftime("%Y-%m-%d") + ' 23:59:59'
+        return (
+            "[dates]"
+            + Termin1.strftime("%Y-%m-%d")
+            + " 00:00:00 bis "
+            + Termin2.strftime("%Y-%m-%d")
+            + " 23:59:59"
+        )
     except:
-        return '[dates]' + Termin1.strftime("%Y-%m-%d") + ' 00:00:00 bis ' + Termin1.strftime("%Y-%m-%d") + ' 23:59:59'
+        return (
+            "[dates]"
+            + Termin1.strftime("%Y-%m-%d")
+            + " 00:00:00 bis "
+            + Termin1.strftime("%Y-%m-%d")
+            + " 23:59:59"
+        )
 
 
 def getDate(Termin1):
@@ -137,9 +149,9 @@ def getDate(Termin1):
 
 
 def getEinsNull(text):
-    if (text == 'ja'):
+    if text == "ja":
         return 1
-    if (text == 'nein'):
+    if text == "nein":
         return 0
     return -1
 
@@ -147,20 +159,27 @@ def getEinsNull(text):
 # Extract the Leaders as Array from Text
 def getLeaders(LeadersTxt):
     global Tourenfuehrer  # aus Keys.xlsx
-    LeadersOut = ''
-    LeadersTxt = LeadersTxt.replace(" und ", ",").replace(" & ", ",") \
-        .replace("Dr. med.", "").replace("Dr.med.", "").replace("Dr.", "")
-    Leaders = LeadersTxt.split(',')
+    LeadersOut = ""
+    LeadersTxt = (
+        LeadersTxt.replace(" und ", ",")
+        .replace(" & ", ",")
+        .replace("Dr. med.", "")
+        .replace("Dr.med.", "")
+        .replace("Dr.", "")
+    )
+    Leaders = LeadersTxt.split(",")
     for leader in Leaders:
         leaderCor = leader.strip()
         # Spezifische Umschlüsselungen für einige Namen können hier eingefügt werden. Z.b Manche tragen ihren Spitznamen ein.
         tf = getTourenfuehrer(leaderCor)
         if tf is None:
-            print(f"ERROR: Tourenführer {leader} ist nicht in der Liste bekannter Tourenführer. (tried: {leaderCor})")
+            print(
+                f"ERROR: Tourenführer {leader} ist nicht in der Liste bekannter Tourenführer. (tried: {leaderCor})"
+            )
         else:
             if len(LeadersOut) > 2:
-                LeadersOut = LeadersOut + ','
-            LeadersOut = LeadersOut + tf['fullpath']
+                LeadersOut = LeadersOut + ","
+            LeadersOut = LeadersOut + tf["fullpath"]
     return LeadersOut
 
 
@@ -172,17 +191,17 @@ def GetGroup(Gruppe):
 def getKategorieForGruppe(Gruppe):
     match Gruppe:
         case "Mountainbike":
-            return Kategorie['Mountainbike']
+            return Kategorie["Mountainbike"]
         case "Mankeis":
-            return Kategorie['Familien']
+            return Kategorie["Familien"]
         case "Jugendklettergruppe":
-            return Kategorie['Sportklettern']
+            return Kategorie["Sportklettern"]
         case "Familiengruppe":
-            return Kategorie['Familien']
+            return Kategorie["Familien"]
         case "Klettertreff":
-            return Kategorie['Sportklettern']
+            return Kategorie["Sportklettern"]
         case "Seniorengruppe":
-            return Kategorie['Senior*innen']
+            return Kategorie["Senior*innen"]
         case _:
             return ""
 
@@ -204,35 +223,40 @@ def getMaxNumberOfParticipants(inStr) -> int:
     return num
 
 
-def getNumbersFromString(inStr, Field='_', mandatory=False) -> int:
+def getNumbersFromString(inStr, Field="_", mandatory=False) -> int:
     inStr = inStr.strip()
     default = 0
     if mandatory:
         default = 99
-    if (len(inStr) == 0):
+    if len(inStr) == 0:
         if mandatory:
-            print("ERROR String is empty! Field: \"" + Field + "\"")
+            print('ERROR String is empty! Field: "' + Field + '"')
         return default
     if inStr == "nan":
         if mandatory:
-            print("ERROR String is empty (NaN)! Field: \"" + Field + "\"")
+            print('ERROR String is empty (NaN)! Field: "' + Field + '"')
         return default
     elif inStr == "unbegrenzt":
         return 99
-    p = re.compile(r'([\d,.]+)\s*(\w*)')
+    p = re.compile(r"([\d,.]+)\s*(\w*)")
     num = p.match(inStr).group(1)
     return num
 
 
 def getSesonID():
-    Season = 'Sommer'
-    if (datetime.today().month > 6):  # Wenn Juli oder später ausgeführt wird es wohl das Winterprogramm sein
-        Season = 'Winter'
+    Season = "Sommer"
+    if (
+        datetime.today().month > 6
+    ):  # Wenn Juli oder später ausgeführt wird es wohl das Winterprogramm sein
+        Season = "Winter"
     ProgramYear = datetime.today().year
-    if (Season == 'Winter'):
-        ProgramYear = (datetime.today().year) + 1  # Winterprogramm wird für das Folgejahr erstellt
-    SeasonID = Season + '' + str(ProgramYear)
+    if Season == "Winter":
+        ProgramYear = (
+            datetime.today().year
+        ) + 1  # Winterprogramm wird für das Folgejahr erstellt
+    SeasonID = Season + "" + str(ProgramYear)
     return SeasonID
+
 
 # Einlesen aller Daten aus der Keys.xlsx
 def init():
