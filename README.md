@@ -1,80 +1,66 @@
 # DAV360_Transformator
 -> Dieses Repository basiert auf einem Fork von matmuc/DAV360_Transformator
 
-Konvertiere Touren und Gruppenveranstaltungen für den Import in DAV360 PIMCORE Redaktionstool.
+Konvertiert Touren- und Veranstaltungs-Eingabeformulare (Excel) für den Import in das DAV360 PIMCORE Redaktionstool.
 
-Das System unterscheidet zwischen Touren, Veranstaltungen und Kursen.
-
-# Input
-Die Inputdateien können z.B. durch Microsoft&reg; Forms&trade; Formulare erzeugt werden, in die die Touren und Veranstaltungen eingetragen werden.
-Es wird dabei zwischen "normalen" Touren und Touren durch Gruppen unterschieden. Gruppen haben zudem auch Veranstaltungen, die ein anderes Format haben.
-
-Viele Attribute werden in DAV360 über IDs referneziert, die Zuordnung zwischen IDs und Werten ist in der Datei keys.xlsx. Diese muss Sektionsspezifisch angepasst werden.
-
-# Hinweise:
-- Es waren bei einem Import ID-Pfade doppelt, daher konnte es nicht importiert werden.
-- Beim Import durch DAV des Winterporgramms kam es 2024 zu einem Fehler dass die Uhrzeiten um 1h falsch waren, vermutlich weil in dem Zeitbereich die Uhrumstellung war, 2025 habe ich darauf hingwewiesen und es hat alles gepasst.
-
-# Transformator starten
-
-## Voraussetzungen
-- Git Installiert für Windows z.B. hier downloaden https://git-scm.com/install/windows
+# Voraussetzungen
+- Git installiert, z.B. für Windows hier downloaden: https://git-scm.com/install/windows
 - Python 3.7 oder höher
 
-
-## Setup
-
-### 1. Github Repository auf dem eigenen Rechner auschecken / clonen
-Eingabeaufforderung / CMD Terminal öffnen und folgenden Befehle eingeben:
+# Setup
 
 ```bash
 git clone https://github.com/PhilippLemke/DAV360_Transformator.git
 cd DAV360_Transformator
-```
-
-### 2. Virtuelle Python-Umgebung erstellen
-```bash
 python3 -m venv venv
-```
-
-### 3. Virtuelle Umgebung aktivieren
-#### macOS / Linux:
-```bash
-source venv/bin/activate
-```
-
-#### Windows:
-```bash
-venv\Scripts\activate
-```
-
-### 4. Abhängigkeiten installieren
-```bash
+source venv/bin/activate   # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-## Transformator ausführen
-
-Beispiel für 
-### Touren:
-```bash
-python TourenTransformatorMSF.py dummy_daten/TAK_Touren.xlsx
-```
-### Veranstaltungen:
-```bash
-python VeranstaltungsTransformatorMSF.py dummy_daten/DAV-Trier_Eingabeformular_Wanderungen_eintaegig.xlsx
-```
-
-### Gruppenveranstaltungen:
+# Transformator ausführen
 
 ```bash
-python GruppenTransformatorMSF.py "TAK Gruppen Eingabeformular.xlsx"
+python transformator.py <typ> --variante <variante> <eingabedatei.xlsx>
 ```
-## Exportierte Dateien
-Diese werden automatisch im  Ordner 📂 export abglegt.
 
+- `<typ>`: `touren` oder `veranstaltungen`
+- `<variante>`: welches Eingabeformular verwendet wurde - `msf`, `tr` oder `gruppen`
 
-## Virtuelle Umgebung deaktivieren
+Beispiele mit den mitgelieferten Beispieldatensätzen:
+
+```bash
+python transformator.py touren --variante msf dummy_daten/touren_msf_beispiel.xlsx
+python transformator.py touren --variante tr dummy_daten/touren_tr_beispiel.xlsx
+python transformator.py veranstaltungen --variante msf dummy_daten/veranstaltungen_msf_beispiel.xlsx
+```
+
+Ein Gruppen-Eingabeformular enthält sowohl Touren als auch Veranstaltungen und wird deshalb zweimal aufgerufen (einmal je Typ):
+
+```bash
+python transformator.py touren --variante gruppen dummy_daten/gruppen_beispiel.xlsx
+python transformator.py veranstaltungen --variante gruppen dummy_daten/gruppen_beispiel.xlsx
+```
+
+Die erzeugten Dateien landen automatisch im Ordner 📂 `export`.
+
+# Konfiguration
+
+- `mapping.yaml` - sektionsspezifische Stammdaten (Kategorien, Tourenführer, Gruppen, Pimcore-IDs). **Muss pro Sektion angepasst werden.**
+- `config.yaml` - Tool-Verhalten (Output-Ordner, Season-Logik)
+- `profiles.yaml` - Spalten-Zuordnung je Typ/Variante
+
+# Hinweise
+- Es waren bei einem Import ID-Pfade doppelt, daher konnte es nicht importiert werden.
+- Beim Import durch DAV des Winterprogramms kam es 2024 zu einem Fehler, dass die Uhrzeiten um 1h falsch waren, vermutlich weil in dem Zeitbereich die Uhrumstellung war, 2025 habe ich darauf hingewiesen und es hat alles gepasst.
+
+# Tests (optional)
+
+```bash
+pip install -r requirements-dev.txt
+pytest
+```
+
+# Virtuelle Umgebung deaktivieren
 ```bash
 deactivate
 ```
