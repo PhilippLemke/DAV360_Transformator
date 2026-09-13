@@ -1,0 +1,233 @@
+# Deklarative Spalten-Zuordnung: für jeden Typ (touren/veranstaltungen/kurse)
+# und jede Formular-Variante (msf/tr/gruppen) wird definiert, welche
+# Eingabespalte über welche Transformation in welches Pimcore-Ausgabefeld
+# fließt. Die Transform-Funktionen selbst stehen in transform_functions.py.
+
+touren:
+  sheet_name: Touren
+  output_columns:
+    - key
+    - bookingCode
+    - title
+    - subtitle
+    - category
+    - technique
+    - stamina
+    - description
+    - Termine
+    - datesAlternativeText
+    - assignedGroups
+    - geographicRegions
+    - locations
+    - leaders
+    - destination
+    - season
+    - characteristic
+    - classification
+    - altitude
+    - distance
+    - stageDuration
+    - requirements
+    - equipment
+    - attachments
+    - images
+    - maxNumberOfParticipants
+    - bookingState
+    - prices
+    - previewDiscussion
+    - registerStart
+    - registerEnd
+    - registration
+    - enquiryForm
+    - meetingPoint
+    - arrivalHints
+    - isPublicTransportAvailable
+    - teaserTitle
+    - teaserSubtitle
+    - teaserAbstract
+    - teaserImage
+
+  variants:
+    # Generisches Microsoft-Forms-Formular ("Toureneingabe.xlsx")
+    msf:
+      fields:
+        key: {transform: key_touren, title: "Bezeichnung/Titel", kategorie: "Kategorie", date: "Termin (Start)"}
+        assignedGroups: {transform: group_fullpath, source: "Gruppen"}
+        bookingCode: {transform: direct, source: "Lfd-Nr."}
+        title: {transform: direct, source: "Bezeichnung/Titel"}
+        category: {transform: lookup, table: kategorie, source: "Kategorie"}
+        technique: {transform: lookup, table: technik, source: "Schwierigkeit"}
+        stamina: {transform: lookup, table: ausdauer, source: "Kondition"}
+        description: {transform: html, source: "Beschreibung"}
+        Termine: {transform: dates_range, start: "Termin (Start)", end: "Termin (Ende)"}
+        datesAlternativeText: {transform: static, value: "<p>&nbsp;</p>"}
+        leaders: {transform: leaders, source: "Tourenleitung/Organisation"}
+        destination: {transform: html, source: "Gebirgsgruppe/Region"}
+        season: {transform: season_id}
+        # Achtung: im Formular sind die Feldnamen vertauscht -
+        # "Klassifizierung" liefert die Eventart, "Tourenart" die Klassifizierung.
+        characteristic: {transform: lookup, table: eventart, source: "Klassifizierung"}
+        classification: {transform: lookup, table: klassifizierung, source: "Tourenart"}
+        requirements: {transform: static, value: "<p>&nbsp;</p>"}
+        maxNumberOfParticipants: {transform: max_participants, source: "max. Zahl der Teilnehmenden"}
+        bookingState: {transform: static, value: ""}
+        registerEnd: {transform: date, source: "Anmeldeschluss"}
+        meetingPoint: {transform: static, value: ""}
+        arrivalHints:
+          transform: template
+          sources: ["Ausgangsort", "Anfahrt km"]
+          template: "Ausgangsort: {{Ausgangsort}}, Entfernung: {{Anfahrt km}}km"
+          wrap: html
+        isPublicTransportAvailable: {transform: ja_nein, source: "Öffentliche Anreise"}
+
+    # Sektionsspezifisches Formular "DAV-Trier Eingabeformular Touren"
+    tr:
+      fields:
+        key: {transform: key_touren, title: "Bezeichnung/Titel", kategorie: "Kategorie", date: "Termin (Start)"}
+        assignedGroups: {transform: group_fullpath, source: "Gruppen"}
+        bookingCode: {transform: direct, source: "Lfd-Nr."}
+        title: {transform: direct, source: "Bezeichnung/Titel"}
+        category: {transform: lookup, table: kategorie, source: "Kategorie"}
+        technique: {transform: lookup, table: technik, source: "Schwierigkeit (Technik)"}
+        stamina: {transform: lookup, table: ausdauer, source: "Kondition"}
+        description: {transform: html, source: "Beschreibung"}
+        altitude: {transform: numbers, source: "Höhenmeter (in Metern)", mandatory: false, label: "Höhenmeter"}
+        distance: {transform: numbers, source: "Strecke (in Kilometern)", mandatory: false, label: "Strecke"}
+        stageDuration: {transform: numbers, source: "Etappendauer (in Stunden)", mandatory: false, label: "Etappendauer"}
+        requirements: {transform: html, source: "Voraussetzungen"}
+        Termine: {transform: dates_range, start: "Termin (Start)", end: "Termin (Ende)"}
+        datesAlternativeText: {transform: static, value: "<p>&nbsp;</p>"}
+        leaders: {transform: leaders, source: "Tourenleitung/Organisation"}
+        destination: {transform: html, source: "Gebirgsgruppe/Region/Ort"}
+        season: {transform: season_id}
+        classification: {transform: lookup, table: klassifizierung, source: "Klassifizierung"}
+        maxNumberOfParticipants: {transform: max_participants, source: "max. Zahl der Teilnehmenden"}
+        previewDiscussion: {transform: html, source: "Vorbesprechung"}
+        bookingState: {transform: static, value: ""}
+        registerEnd: {transform: date, source: "Anmeldeschluss"}
+        registration: {transform: html, source: "Bemerkungen"}
+        meetingPoint: {transform: static, value: ""}
+        arrivalHints:
+          transform: template
+          sources: ["Ausgangsort", "Anfahrt km"]
+          template: "Ausgangsort: {{Ausgangsort}}, Entfernung: {{Anfahrt km}}km"
+          wrap: html
+        isPublicTransportAvailable: {transform: ja_nein, source: "Öffentliche Anreise"}
+        prices:
+          transform: template
+          sources: ["Preis"]
+          template: "Mitglieder: {{Preis}}\nDie Kosten für Anreise, Unterkunft und Verpflegung muss jeder Teilnehmer selbst tragen. Die Teilnehmer eines außerhalb der Region stattfindenden Ausbildungskurses oder einer Ausbildungstour ermöglichen dem Kursleiter bzw. weiteren Ausbildern eine kostenfreie An- und Abreise. Einzelheiten sind mit dem Kursleiter zu klären."
+          wrap: html
+
+    # Kombiniertes Gruppen-Eingabeformular, hier nur die Zeilen mit
+    # Kategorie == "Tour"
+    gruppen:
+      filter: {column: Kategorie, equals: "Tour"}
+      fields:
+        key: {transform: key_gruppen, title: "Bezeichnung/Titel", date: "Termin (Start)", gruppe: "Gruppe"}
+        assignedGroups: {transform: group_fullpath, source: "Gruppe"}
+        bookingCode: {transform: booking_code_gruppen, prefix: "T", gruppe: "Gruppe", id: "ID"}
+        title: {transform: direct, source: "Bezeichnung/Titel"}
+        category: {transform: gruppe_kategorie, source: "Gruppe"}
+        technique: {transform: lookup, table: technik, source: "Schwierigkeit"}
+        stamina: {transform: lookup, table: ausdauer, source: "Kondition"}
+        description: {transform: html, source: "Beschreibung"}
+        Termine: {transform: dates_range, start: "Termin (Start)", end: "Termin (Ende)"}
+        datesAlternativeText: {transform: static, value: "<p>&nbsp;</p>"}
+        leaders: {transform: leaders, source: "Tourenleitung/Organisation"}
+        destination: {transform: html, source: "Gebirgsgruppe/Region/Ort"}
+        season: {transform: season_id}
+        characteristic: {transform: lookup, table: eventart, source: "Klassifizierung"}
+        classification: {transform: lookup, table: klassifizierung, value: "Gemeinschaftstour"}
+        requirements: {transform: static, value: "<p>&nbsp;</p>"}
+        maxNumberOfParticipants: {transform: max_participants, source: "max. Zahl der Teilnehmenden"}
+        bookingState: {transform: static, value: ""}
+        registerEnd: {transform: date, source: "Anmeldeschluss"}
+        meetingPoint: {transform: static, value: ""}
+        arrivalHints:
+          transform: template
+          sources: ["Ausgangsort", "Anfahrt km"]
+          template: "Ausgangsort: {{Ausgangsort}}, Entfernung: {{Anfahrt km}}km"
+          wrap: html
+        isPublicTransportAvailable: {transform: ja_nein, source: "Öffentliche Anreise"}
+
+veranstaltungen:
+  sheet_name: Veranstaltungen
+  output_columns:
+    - key
+    - bookingCode
+    - title
+    - subtitle
+    - description
+    - Termine
+    - datesAlternativeText
+    - assignedGroups
+    - locations
+    - leaders
+    - destination
+    - images
+    - maxNumberOfParticipants
+    - bookingState
+    - prices
+    - previewDiscussion
+    - registerStart
+    - registerEnd
+    - registration
+    - enquiryForm
+    - meetingPoint
+    - arrivalHints
+    - isPublicTransportAvailable
+    - teaserTitle
+    - teaserSubtitle
+    - teaserAbstract
+    - teaserImage
+
+  variants:
+    # Sektionsspezifisches Formular "DAV-Trier Eingabeformular Wanderungen - eintägig"
+    msf:
+      fields:
+        key: {transform: key_touren, title: "Bezeichnung/Titel", kategorie: "Kategorie", date: "Termin (Datum)"}
+        assignedGroups: {transform: group_fullpath, source: "Gruppe"}
+        bookingCode: {transform: direct, source: "Lfd-Nr."}
+        title: {transform: direct, source: "Bezeichnung/Titel"}
+        description:
+          transform: template
+          sources: ["Beschreibung", "Profil", "Dauer"]
+          template: "{{Beschreibung}}\nProfil: {{Profil}}\nDauer: {{Dauer}}"
+          wrap: html
+        Termine: {transform: date_with_time, date: "Termin (Datum)", time: "Startzeit (bitte angeben im Format HH:MM)"}
+        datesAlternativeText: {transform: static, value: "<p>&nbsp;</p>"}
+        leaders: {transform: leaders, source: "Leitung/Organisation"}
+        destination: {transform: html, source: "Schlusseinkehr"}
+        arrivalHints: {transform: html, source: "Treffpunkt"}
+        registration: {transform: html, source: "Bemerkungen"}
+        # teaserImage bleibt bewusst leer (1:1-Verhalten wie bisher, siehe
+        # README/Migrationshinweise) - die Bilddaten liegen zwar in
+        # mapping.yaml (gruppen.*.image_path) bereit, werden hier aber
+        # nicht verwendet.
+
+    # Kombiniertes Gruppen-Eingabeformular, hier nur die Zeilen mit
+    # Kategorie == "Veranstaltung"
+    gruppen:
+      filter: {column: Kategorie, equals: "Veranstaltung"}
+      fields:
+        key: {transform: key_gruppen, title: "Bezeichnung/Titel", date: "Termin (Start)", gruppe: "Gruppe"}
+        bookingCode: {transform: booking_code_gruppen, prefix: "V", gruppe: "Gruppe", id: "ID"}
+        title: {transform: direct, source: "Bezeichnung/Titel"}
+        subtitle: {transform: static, value: ""}
+        description: {transform: html, source: "Beschreibung"}
+        Termine: {transform: dates_range, start: "Termin (Start)", end: "Termin (Ende)"}
+        datesAlternativeText: {transform: static, value: "<p>&nbsp;</p>"}
+        assignedGroups: {transform: group_fullpath, source: "Gruppe"}
+        leaders: {transform: leaders, source: "Tourenleitung/Organisation"}
+        maxNumberOfParticipants: {transform: max_participants, source: "max. Zahl der Teilnehmenden"}
+        registerEnd: {transform: date, source: "Anmeldeschluss"}
+        destination: {transform: html, source: "Gebirgsgruppe/Region/Ort"}
+
+# Platzhalter: noch keine Kurs-Logik vorhanden. "kurse" ist bereits als Typ
+# wählbar, der Transformator meldet aber klar, dass noch keine Variante
+# implementiert ist, statt mit einem unklaren Fehler abzubrechen.
+kurse:
+  sheet_name: Kurse
+  output_columns: []
+  variants: {}

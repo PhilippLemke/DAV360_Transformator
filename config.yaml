@@ -1,0 +1,27 @@
+# Verhalten des DAV360-Transformators (nicht sektionsspezifisch).
+# Sektionsspezifische Stammdaten stehen in mapping.yaml, die
+# Spalten-Zuordnung pro Typ/Variante in profiles.yaml.
+
+mapping_file: mapping.yaml
+profiles_file: profiles.yaml
+
+output:
+  # Zielordner für die erzeugten Exportdateien. Falls der Ordner nicht
+  # existiert, wird in das aktuelle Verzeichnis geschrieben.
+  dir: export
+  # Dateinamen-Vorlagen je Typ/Variante. {season_id} wird automatisch
+  # durch z.B. "Sommer2026" oder "Winter2027" ersetzt.
+  filenames:
+    touren:
+      msf: "DAV_Tourenexport_{season_id}.xlsx"
+      tr: "DAV_Tourenexport_{season_id}.xlsx"
+      gruppen: "DAV_GruppenexportTouren_{season_id}.xlsx"
+    veranstaltungen:
+      msf: "DAV_Veranstaltungsexport_{season_id}.xlsx"
+      gruppen: "DAV_GruppenexportEvents_{season_id}.xlsx"
+
+season:
+  # Ab diesem Monat (exklusiv) wird davon ausgegangen, dass es sich um das
+  # Winterprogramm des Folgejahres handelt, sonst um das Sommerprogramm des
+  # laufenden Jahres.
+  winter_starts_after_month: 6
