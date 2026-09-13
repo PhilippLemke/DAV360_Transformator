@@ -14,9 +14,9 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FIXTURES = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fixtures", "expected")
 
 CASES = [
-    ("touren", "msf", "dummy_daten/touren_msf_beispiel.xlsx", "touren_msf.xlsx"),
+    ("touren", "tak", "dummy_daten/touren_tak_beispiel.xlsx", "touren_tak.xlsx"),
     ("touren", "tr", "dummy_daten/touren_tr_beispiel.xlsx", "touren_tr.xlsx"),
-    ("veranstaltungen", "msf", "dummy_daten/veranstaltungen_msf_beispiel.xlsx", "veranstaltungen_msf.xlsx"),
+    ("veranstaltungen", "tr", "dummy_daten/veranstaltungen_tr_beispiel.xlsx", "veranstaltungen_tr.xlsx"),
     ("touren", "gruppen", "dummy_daten/gruppen_beispiel.xlsx", "gruppen_touren.xlsx"),
     ("veranstaltungen", "gruppen", "dummy_daten/gruppen_beispiel.xlsx", "gruppen_veranstaltungen.xlsx"),
 ]

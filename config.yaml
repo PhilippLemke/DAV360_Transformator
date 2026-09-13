@@ -13,11 +13,11 @@ output:
   # durch z.B. "Sommer2026" oder "Winter2027" ersetzt.
   filenames:
     touren:
-      msf: "DAV_Tourenexport_{season_id}.xlsx"
+      tak: "DAV_Tourenexport_{season_id}.xlsx"
       tr: "DAV_Tourenexport_{season_id}.xlsx"
       gruppen: "DAV_GruppenexportTouren_{season_id}.xlsx"
     veranstaltungen:
-      msf: "DAV_Veranstaltungsexport_{season_id}.xlsx"
+      tr: "DAV_Veranstaltungsexport_{season_id}.xlsx"
       gruppen: "DAV_GruppenexportEvents_{season_id}.xlsx"
 
 season:

@@ -24,14 +24,15 @@ python transformator.py <typ> --variante <variante> <eingabedatei.xlsx>
 ```
 
 - `<typ>`: `touren` oder `veranstaltungen`
-- `<variante>`: welches Eingabeformular verwendet wurde - `msf`, `tr` oder `gruppen`
+- `<variante>`: welches Eingabeformular verwendet wurde - je nach Typ `tak`, `tr` oder `gruppen`
+  (`tak` = ursprüngliches Formular aus dem Fork-Original, `tr` = Sektion-Trier-eigenes Formular)
 
 Beispiele mit den mitgelieferten Beispieldatensätzen:
 
 ```bash
-python transformator.py touren --variante msf dummy_daten/touren_msf_beispiel.xlsx
+python transformator.py touren --variante tak dummy_daten/touren_tak_beispiel.xlsx
 python transformator.py touren --variante tr dummy_daten/touren_tr_beispiel.xlsx
-python transformator.py veranstaltungen --variante msf dummy_daten/veranstaltungen_msf_beispiel.xlsx
+python transformator.py veranstaltungen --variante tr dummy_daten/veranstaltungen_tr_beispiel.xlsx
 ```
 
 Ein Gruppen-Eingabeformular enthält sowohl Touren als auch Veranstaltungen und wird deshalb zweimal aufgerufen (einmal je Typ):

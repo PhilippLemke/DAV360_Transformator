@@ -48,8 +48,8 @@ touren:
     - teaserImage
 
   variants:
-    # Generisches Microsoft-Forms-Formular ("Toureneingabe.xlsx")
-    msf:
+    # Ursprüngliches Formular aus dem Fork-Original (Sektion TAK / Turner-Alpenkränzchen)
+    tak:
       fields:
         key: {transform: key_touren, title: "Bezeichnung/Titel", kategorie: "Kategorie", date: "Termin (Start)"}
         assignedGroups: {transform: group_fullpath, source: "Gruppen"}
@@ -184,7 +184,7 @@ veranstaltungen:
 
   variants:
     # Sektionsspezifisches Formular "DAV-Trier Eingabeformular Wanderungen - eintägig"
-    msf:
+    tr:
       fields:
         key: {transform: key_touren, title: "Bezeichnung/Titel", kategorie: "Kategorie", date: "Termin (Datum)"}
         assignedGroups: {transform: group_fullpath, source: "Gruppe"}
