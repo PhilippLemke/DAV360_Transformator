@@ -1,0 +1,127 @@
+# Sektionsspezifische Stammdaten für den DAV360-Transformator.
+# Ersetzt die frühere Keys.xlsx 1:1 als YAML. Diese Datei muss pro Sektion
+# angepasst werden (IDs kommen aus dem Pimcore-Redaktionstool).
+#
+# Diese Beispieldatei enthält nur Platzhalter-Daten (Max Mustermann /
+# Erika Musterfrau, Sektion Trier) und ist bewusst so gehalten, dass die
+# Beispieldatensätze in dummy_daten/ damit direkt funktionieren.
+
+kategorie:
+  Bergsteigen: {id: 417, short_code: BS}
+  Bergwandern: {id: 418, short_code: BW}
+  Bouldern: {id: 419, short_code: BOU}
+  Hochtouren: {id: 420, short_code: HT}
+  Hochtour: {id: 420, short_code: HT} # Alias, manche Formulare nutzen die Einzahl
+  Klettern: {id: 421, short_code: KLE}
+  Klettersteig: {id: 422, short_code: KS}
+  Mountainbike: {id: 423, short_code: MTB}
+  Radtour: {id: 35246, short_code: RT}
+  Schneeschuhgehen: {id: 424, short_code: SSG}
+  Ski alpin: {id: 871, short_code: SKI}
+  Skihochtour: {id: 22965, short_code: SHT}
+  Skilanglauf: {id: 425, short_code: SLL}
+  Skitour: {id: 426, short_code: ST}
+  Wandern: {id: 2284, short_code: WAN}
+  Wettkampf: {id: 39348, short_code: WK}
+  Veranstaltung: {id: null, short_code: VA}
+
+technik:
+  leicht: 413
+  mittel: 414
+  schwer: 415
+  sehr schwer: 416
+
+ausdauer:
+  gering: 409
+  mittel: 410
+  groß: 411
+  sehr groß: 412
+
+saison:
+  Ganzjährig: 405
+  Indoor: 406
+  Sommer: 407
+  Winter: 408
+
+eventart:
+  Einzeltermin: 392
+  Mehrtagesevent: 393
+  "Regelmäßiger Event / Training": 394
+  Tagesevent: 395
+  Wochenendevent: 396
+  Tagesveranstaltung: 48744
+  Mehrtagesveranstaltung: 48745
+  Wiederkehrende Veranstaltung: 48746
+
+klassifizierung:
+  Führungstour: 397
+  Gemeinschaftstour: 398
+  Ausbildungstour: 39481
+
+# Tourenführer:innen / Leiter:innen. Der Name muss exakt so eingetragen sein,
+# wie er im Eingabeformular geschrieben wird (Vorname Nachname).
+tourenfuehrer:
+  Max Mustermann:
+    id: 2090142
+    fullpath: "/264 - Sektion Trier/Personen/Personen/Max Mustermann"
+    first_name: Max
+    last_name: Mustermann
+  Erika Musterfrau:
+    id: 2090143
+    fullpath: "/264 - Sektion Trier/Personen/Personen/Erika Musterfrau"
+    first_name: Erika
+    last_name: Musterfrau
+
+# Feste Gruppen der Sektion, u.a. für Gruppenveranstaltungen/-touren.
+gruppen:
+  Sonntagswanderung:
+    fullpath: "/264 - Sektion Trier/Gruppen/Wandergruppe"
+    short_code: WA
+    image_path: "/264 - Sektion Trier/Events/Sonntagswanderung.jpg"
+  U12-Wanderung:
+    fullpath: "/264 - Sektion Trier/Gruppen/Wandergruppe"
+    short_code: WA
+    image_path: "/264 - Sektion Trier/Events/Pausenplatz.jpg"
+  Familienwanderung:
+    fullpath: "/264 - Sektion Trier/Gruppen/Wandergruppe"
+    short_code: WA
+    image_path: "/264 - Sektion Trier/Events/Familienwanderung.jpg"
+  Mountainbike:
+    fullpath: "/264 - Sektion Trier/Gruppen/Mountainbiken"
+    short_code: MTB
+    image_path: "/264 - Sektion Trier/Events/Mountainbike.jpg"
+  Sektionsabend:
+    fullpath: null
+    short_code: null
+    image_path: "/264 - Sektion Trier/Events/Kaminfeuer.jpg"
+  Arbeitstag:
+    fullpath: null
+    short_code: null
+    image_path: "/264 - Sektion Trier/Events/Arbeitstag.jpg"
+  Mountaindogs:
+    fullpath: "/264 - Sektion Trier/Gruppen/Mountaindogs"
+    short_code: MTD
+    image_path: "/264 - Sektion Trier/Gruppen/Mountaindogs1.jpg"
+  Klettern:
+    fullpath: "/264 - Sektion Trier/Gruppen/Klettern"
+    short_code: KLE
+    image_path: "/264 - Sektion Trier/Gruppen/Klettern.jpg"
+  Bergsteigen:
+    fullpath: "/264 - Sektion Trier/Gruppen/Bergsteigen"
+    short_code: BS
+    image_path: "/264 - Sektion Trier/Gruppen/Bergsteigen.jpg"
+  Leistungskader:
+    fullpath: "/264 - Sektion Trier/Gruppen/Leistungskader"
+    short_code: WK
+    image_path: "/264 - Sektion Trier/Gruppen/Leistungskader.jpg"
+
+# Feste Zuordnung: wenn eine Tour/Veranstaltung einer festen Gruppe zugeordnet
+# ist, welche Kategorie (siehe oben) bekommt sie automatisch zugewiesen.
+# Nur für Gruppen mit fester Sportart relevant, sonst leer lassen.
+gruppe_kategorie:
+  Mountainbike: Mountainbike
+  Mankeis: Familien
+  Jugendklettergruppe: Sportklettern
+  Familiengruppe: Familien
+  Klettertreff: Sportklettern
+  Seniorengruppe: "Senior*innen"
