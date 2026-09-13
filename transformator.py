@@ -91,6 +91,7 @@ def transform_input(input_file, typ_spec, variant_spec, mapping, season_ctx):
 
     workbook = openpyxl.Workbook()
     sheet = workbook.active
+    assert sheet is not None  # ein frisch erzeugtes Workbook hat immer ein aktives Blatt
     sheet.title = typ_spec.get("sheet_name", typ_spec)
 
     output_columns = typ_spec["output_columns"]
@@ -108,7 +109,7 @@ def transform_input(input_file, typ_spec, variant_spec, mapping, season_ctx):
             if spec is None:
                 continue
             value = tf.dispatch(spec, row, mapping, season_ctx)
-            sheet.cell(row=out_row, column=column_index).value = value
+            sheet.cell(row=out_row, column=column_index).value = value  # type: ignore[union-attr]
         out_row += 1
 
     return workbook
