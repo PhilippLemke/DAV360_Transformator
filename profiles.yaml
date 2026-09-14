@@ -224,10 +224,84 @@ veranstaltungen:
         registerEnd: {transform: date, source: "Anmeldeschluss"}
         destination: {transform: html, source: "Gebirgsgruppe/Region/Ort"}
 
-# Platzhalter: noch keine Kurs-Logik vorhanden. "kurse" ist bereits als Typ
-# wählbar, der Transformator meldet aber klar, dass noch keine Variante
-# implementiert ist, statt mit einem unklaren Fehler abzubrechen.
+# Basiert auf dem echten Kurse_export.xlsx (siehe pimcore_exports/) und dem
+# DAV-Trier Kurs-Eingabeformular (siehe formular_imports/). Einige Zielfelder
+# bleiben absichtlich leer, weil das Eingabeformular keine passende Spalte
+# liefert bzw. die Zuordnung noch ungeklärt ist - siehe Fragen.md:
+#   - locations/destination: "Veranstaltungsort" ist im Formular nur
+#     Freitext, das Ziel "locations" erwartet aber einen Pimcore-Objekt-
+#     Fullpath. Wie das aufgelöst werden soll, ist noch offen.
+#   - level: mapping.yaml (kursstufe) enthält nur die Namen, noch keine
+#     echten Pimcore-IDs.
+#   - subtitle, geographicRegions, objectives, contents, equipment,
+#     attachments, images, enquiryForm, arrivalHints,
+#     isPublicTransportAvailable, teaser*: keine Quellspalte im Formular
+#     vorhanden (wie bei touren/veranstaltungen bewusst leer gelassen).
 kurse:
   sheet_name: Kurse
-  output_columns: []
-  variants: {}
+  output_columns:
+    - key
+    - bookingCode
+    - title
+    - subtitle
+    - category
+    - level
+    - description
+    - Termine
+    - datesAlternativeText
+    - assignedGroups
+    - geographicRegions
+    - locations
+    - leaders
+    - destination
+    - season
+    - characteristic
+    - objectives
+    - contents
+    - requirements
+    - equipment
+    - attachments
+    - images
+    - maxNumberOfParticipants
+    - bookingState
+    - prices
+    - previewDiscussion
+    - registerStart
+    - registerEnd
+    - registration
+    - enquiryForm
+    - meetingPoint
+    - arrivalHints
+    - isPublicTransportAvailable
+    - teaserTitle
+    - teaserSubtitle
+    - teaserAbstract
+    - teaserImage
+
+  variants:
+    # Sektionsspezifisches Formular "DAV-Trier Eingabeformular Kurse"
+    tr:
+      fields:
+        key: {transform: key_touren, title: "Bezeichnung/Titel", kategorie: "Kategorie", date: "Termin (Start)"}
+        bookingCode: {transform: direct, source: "Lfd.-Nr."}
+        title: {transform: direct, source: "Bezeichnung/Titel"}
+        category: {transform: lookup, table: kategorie, source: "Kategorie"}
+        level: {transform: lookup, table: kursstufe, source: "Kursstufe"}
+        description: {transform: html, source: "Beschreibung"}
+        Termine: {transform: dates_range, start: "Termin (Start)", end: "Termin (Ende)"}
+        datesAlternativeText: {transform: static, value: "<p>&nbsp;</p>"}
+        assignedGroups: {transform: group_fullpath, source: "Gruppen"}
+        leaders: {transform: leaders, source: "Tourenleitung/Organisation"}
+        season: {transform: season_id}
+        requirements: {transform: html, source: "Voraussetzungen"}
+        maxNumberOfParticipants: {transform: max_participants, source: "max. Zahl der Teilnehmenden"}
+        bookingState: {transform: static, value: ""}
+        prices:
+          transform: template
+          sources: ["Preis"]
+          template: "Mitglieder: {{Preis}}\nDie Kosten für Anreise, Unterkunft und Verpflegung muss jeder Teilnehmer selbst tragen. Die Teilnehmer eines außerhalb der Region stattfindenden Ausbildungskurses oder einer Ausbildungstour ermöglichen dem Kursleiter bzw. weiteren Ausbildern eine kostenfreie An- und Abreise. Einzelheiten sind mit dem Kursleiter zu klären."
+          wrap: html
+        previewDiscussion: {transform: html, source: "Vorbesprechung"}
+        registerEnd: {transform: date, source: "Anmeldeschluss"}
+        registration: {transform: html, source: "Bemerkungen"}
+        meetingPoint: {transform: static, value: ""}
