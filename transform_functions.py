@@ -8,6 +8,8 @@
 
 import re
 
+import pandas
+
 # Spec-Schlüssel, deren Wert kein Spaltenname aus der Eingabedatei ist
 # (sondern ein Literal, eine Tabellenreferenz o.ä.). Alles andere in einer
 # Feld-Spec wird als benötigte Eingabespalte gewertet, siehe
@@ -88,30 +90,30 @@ def get_ja_nein(text):
     return -1
 
 
-def get_dates(termin1, termin2):
-    try:
-        return (
-            "[dates]"
-            + termin1.strftime("%Y-%m-%d")
-            + " 00:00:00 bis "
-            + termin2.strftime("%Y-%m-%d")
-            + " 23:59:59"
-        )
-    except AttributeError:
-        return (
-            "[dates]"
-            + termin1.strftime("%Y-%m-%d")
-            + " 00:00:00 bis "
-            + termin1.strftime("%Y-%m-%d")
-            + " 23:59:59"
-        )
+def get_dates(termin1, termin2, label_start="Termin (Start)", label_end="Termin (Ende)"):
+    if pandas.isna(termin1):
+        print(f'ERROR: Feld "{label_start}" enthält kein gültiges Datum, "Termine" bleibt leer.')
+        return ""
+    start = termin1.strftime("%Y-%m-%d")
+    if pandas.isna(termin2):
+        print(f'WARNING: Feld "{label_end}" enthält kein gültiges Datum, verwende "{label_start}" auch als Ende.')
+        ende = start
+    else:
+        ende = termin2.strftime("%Y-%m-%d")
+    return f"[dates]{start} 00:00:00 bis {ende} 23:59:59"
 
 
-def get_date(termin1):
+def get_date(termin1, label="Datum"):
+    if pandas.isna(termin1):
+        print(f'WARNING: Feld "{label}" enthält kein gültiges Datum, verwende leeren Wert.')
+        return ""
     return termin1.strftime("%Y-%m-%d")
 
 
-def get_dates_with_time(datum, zeit_str):
+def get_dates_with_time(datum, zeit_str, label="Termin (Datum)"):
+    if pandas.isna(datum):
+        print(f'ERROR: Feld "{label}" enthält kein gültiges Datum, "Termine" bleibt leer.')
+        return ""
     zeit_str = _clean(zeit_str).strip()
     try:
         stunde, minute = (int(teil) for teil in zeit_str.split(":")[:2])
@@ -165,9 +167,12 @@ def get_kategorie_short_code(mapping, kategorie_name):
     return entry.get("short_code", "")
 
 
-def get_key(mapping, titel, kategorie_name, datum):
+def get_key(mapping, titel, kategorie_name, datum, label="Datum"):
     titel_clean = _strip_parentheses_and_spaces(titel)
     short_code = get_kategorie_short_code(mapping, kategorie_name)
+    if pandas.isna(datum):
+        print(f'ERROR: Feld "{label}" enthält kein gültiges Datum, "key" ist unvollständig.')
+        return short_code + titel_clean
     return datum.strftime("%y%m") + short_code + titel_clean
 
 
@@ -190,9 +195,12 @@ def get_group_short_code(mapping, name):
     return get_group_entry(mapping, name).get("short_code") or ""
 
 
-def get_key_groups(mapping, titel, gruppe_name, datum):
+def get_key_groups(mapping, titel, gruppe_name, datum, label="Datum"):
     titel_clean = _strip_parentheses_and_spaces(titel)
     short_code = get_group_short_code(mapping, gruppe_name)
+    if pandas.isna(datum):
+        print(f'ERROR: Feld "{label}" enthält kein gültiges Datum, "key" ist unvollständig.')
+        return short_code + titel_clean
     return short_code + datum.strftime("%y%m") + titel_clean
 
 
@@ -238,13 +246,13 @@ def dispatch(spec, row, mapping, season_ctx):
         return get_ja_nein(row.get(spec["source"]))
 
     if transform == "date":
-        return get_date(row.get(spec["source"]))
+        return get_date(row.get(spec["source"]), spec["source"])
 
     if transform == "dates_range":
-        return get_dates(row.get(spec["start"]), row.get(spec["end"]))
+        return get_dates(row.get(spec["start"]), row.get(spec["end"]), spec["start"], spec["end"])
 
     if transform == "date_with_time":
-        return get_dates_with_time(row.get(spec["date"]), row.get(spec["time"]))
+        return get_dates_with_time(row.get(spec["date"]), row.get(spec["time"]), spec["date"])
 
     if transform == "leaders":
         return get_leaders(row.get(spec["source"]), mapping.tourenfuehrer)
@@ -254,10 +262,10 @@ def dispatch(spec, row, mapping, season_ctx):
         return lookup_id(mapping, spec["table"], key_name)
 
     if transform == "key_touren":
-        return get_key(mapping, row.get(spec["title"]), row.get(spec["kategorie"]), row.get(spec["date"]))
+        return get_key(mapping, row.get(spec["title"]), row.get(spec["kategorie"]), row.get(spec["date"]), spec["date"])
 
     if transform == "key_gruppen":
-        return get_key_groups(mapping, row.get(spec["title"]), row.get(spec["gruppe"]), row.get(spec["date"]))
+        return get_key_groups(mapping, row.get(spec["title"]), row.get(spec["gruppe"]), row.get(spec["date"]), spec["date"])
 
     if transform == "group_fullpath":
         return get_group_fullpath(mapping, row.get(spec["source"]))
