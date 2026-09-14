@@ -23,7 +23,7 @@ pip install -r requirements.txt
 python transformator.py <typ> --variante <variante> <eingabedatei.xlsx>
 ```
 
-- `<typ>`: `touren` oder `veranstaltungen`
+- `<typ>`: `touren`, `veranstaltungen` oder `kurse`
 - `<variante>`: welches Eingabeformular verwendet wurde - je nach Typ `tak`, `tr` oder `gruppen`
   (`tak` = ursprüngliches Formular aus dem Fork-Original, `tr` = Sektion-Trier-eigenes Formular)
 
@@ -53,6 +53,7 @@ Die erzeugten Dateien landen automatisch im Ordner 📂 `export`.
 # Hinweise
 - Es waren bei einem Import ID-Pfade doppelt, daher konnte es nicht importiert werden.
 - Beim Import durch DAV des Winterprogramms kam es 2024 zu einem Fehler, dass die Uhrzeiten um 1h falsch waren, vermutlich weil in dem Zeitbereich die Uhrumstellung war, 2025 habe ich darauf hingewiesen und es hat alles gepasst.
+- Der Typ `kurse` (Variante `tr`, DAV-Trier Kurs-Eingabeformular) ist neu und deckt noch nicht alle Zielfelder ab: `level` (Kursstufe), `locations`/`destination` (Veranstaltungsort) und `bookingState` bleiben bewusst leer, bis die zugehörigen Pimcore-IDs bzw. die Zuordnungslogik geklärt sind. Betroffene Zeilen/Felder werden beim Ausführen mit `WARNING`/`ERROR` markiert, der Import selbst läuft aber durch.
 
 # Tests (optional)
 

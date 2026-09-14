@@ -2,9 +2,11 @@
 # Ersetzt die frühere Keys.xlsx 1:1 als YAML. Diese Datei muss pro Sektion
 # angepasst werden (IDs kommen aus dem Pimcore-Redaktionstool).
 #
-# Diese Beispieldatei enthält nur Platzhalter-Daten (Max Mustermann /
-# Erika Musterfrau, Sektion Trier) und ist bewusst so gehalten, dass die
-# Beispieldatensätze in dummy_daten/ damit direkt funktionieren.
+# Die IDs unter kategorie/technik/ausdauer/saison/eventart/klassifizierung
+# sind echte Produktions-IDs der Sektion Trier (264) - abgeglichen mit den
+# realen Pimcore-Exporten unter pimcore_exports/. Nur die Personendaten
+# (tourenfuehrer: Max Mustermann / Erika Musterfrau) sind Platzhalter, damit
+# die Beispieldatensätze in dummy_daten/ direkt funktionieren.
 
 kategorie:
   Bergsteigen: {id: 417, short_code: BS}
@@ -57,6 +59,15 @@ klassifizierung:
   Führungstour: 397
   Gemeinschaftstour: 398
   Ausbildungstour: 39481
+
+# TODO (siehe Fragen.md): IDs noch unbekannt. Der reale Kurse-Export zeigt
+# fünf verschiedene level-IDs (399, 400, 402, 403, 404), aus dem
+# DAV-Trier-Kursformular sind bisher nur die Namen "Grundkurs" und
+# "Spezialkurs" bekannt - welcher Name zu welcher ID gehört und wie die
+# übrigen Kursstufen heißen, muss noch aus Pimcore nachgetragen werden.
+kursstufe:
+  Grundkurs: null
+  Spezialkurs: null
 
 # Tourenführer:innen / Leiter:innen. Der Name muss exakt so eingetragen sein,
 # wie er im Eingabeformular geschrieben wird (Vorname Nachname).
