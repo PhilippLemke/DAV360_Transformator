@@ -86,8 +86,21 @@ def row_matches_filter(row, variant_spec):
     return str(row.get(row_filter["column"])) == row_filter["equals"]
 
 
-def transform_input(input_file, typ_spec, variant_spec, mapping, season_ctx):
+def check_required_columns(input_file, typ, variante, data_in, variant_spec):
+    required = tf.required_columns_for_variant(variant_spec)
+    missing = sorted(col for col in required if col not in data_in.columns)
+    if not missing:
+        return
+    print(f"ERROR: Eingabedatei '{input_file}' passt nicht zu Typ '{typ}' / Variante '{variante}'.")
+    print(f"Es fehlen folgende erwartete Spalten: {', '.join(missing)}")
+    print(f"Vorhandene Spalten: {', '.join(str(c) for c in data_in.columns)}")
+    print("Bitte prüfen, ob die richtige Eingabedatei bzw. die richtige --variante gewählt wurde.")
+    sys.exit(1)
+
+
+def transform_input(input_file, typ, variante, typ_spec, variant_spec, mapping, season_ctx):
     data_in = pandas.read_excel(input_file).reset_index()
+    check_required_columns(input_file, typ, variante, data_in, variant_spec)
 
     workbook = openpyxl.Workbook()
     sheet = workbook.active
@@ -103,12 +116,18 @@ def transform_input(input_file, typ_spec, variant_spec, mapping, season_ctx):
     for _, row in data_in.iterrows():
         if not row_matches_filter(row, variant_spec):
             continue
-        print(f"Verarbeite Zeile: {row.get('Bezeichnung/Titel', row.get('Titel', ''))}")
+        row_label = row.get("Bezeichnung/Titel", row.get("Titel", ""))
+        print(f"Verarbeite Zeile: {row_label}")
         for column_index, column_name in enumerate(output_columns, start=1):
             spec = fields.get(column_name)
             if spec is None:
                 continue
-            value = tf.dispatch(spec, row, mapping, season_ctx)
+            try:
+                value = tf.dispatch(spec, row, mapping, season_ctx)
+            except Exception as exc:
+                print(f"ERROR: Zeile '{row_label}', Ausgabefeld '{column_name}' (transform: {spec.get('transform')}): {exc}")
+                print("Vermutlich fehlt in dieser Zeile ein benötigter Eingabewert (z.B. ein Datum). Bitte Eingabedatei prüfen.")
+                sys.exit(1)
             sheet.cell(row=out_row, column=column_index).value = value  # type: ignore[union-attr]
         out_row += 1
 
@@ -139,7 +158,7 @@ def run(typ, variante, input_file, config, profiles, mapping):
     print(f"Typ: {typ}, Variante: {variante}, Season: {season_ctx.season_id}")
     print(f"Verwende Eingabedatei: {input_file}")
 
-    workbook = transform_input(input_file, typ_spec, variant_spec, mapping, season_ctx)
+    workbook = transform_input(input_file, typ, variante, typ_spec, variant_spec, mapping, season_ctx)
 
     out_file = resolve_output_path(config, typ, variante, season_ctx)
     workbook.save(out_file)
