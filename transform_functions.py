@@ -90,12 +90,62 @@ def get_ja_nein(text):
     return -1
 
 
+_DATE_PARTS_RE = re.compile(r"^(\d{1,4})[./\-](\d{1,4})[./\-](\d{1,4})$")
+
+
+def _parse_date(value, label="Datum"):
+    """Wandelt einen Zellwert robust in ein datetime-Objekt um (oder None).
+
+    Excel erkennt Zellen, die im amerikanischen Format (Monat.Tag.Jahr bzw.
+    Monat/Tag/Jahr) eingetippt wurden, in einer deutsch formatierten Spalte
+    (Tag.Monat.Jahr) oft nicht als Datum und legt sie als Text ab (z.B.
+    "2.21.2027" für den 21. Februar 2027). pandas liest solche Zellen dann
+    als Rohtext statt als Timestamp. Ist der zweite Teil eindeutig nur als
+    Tag gültig (>12) und der erste nur als Monat (<=12), handelt es sich
+    zweifelsfrei um das amerikanische Format - das wird hier automatisch
+    erkannt und umgerechnet. In allen anderen Fällen (z.B. "5.1.2026") bleibt
+    es beim üblichen deutschen Tag-zuerst-Format.
+    """
+    if value is None:
+        return None
+    if hasattr(value, "strftime"):
+        return None if pandas.isna(value) else value
+    text = str(value).strip()
+    if not text or text.lower() == "nan":
+        return None
+
+    match = _DATE_PARTS_RE.match(text)
+    if match:
+        teil1, teil2, jahr = (int(teil) for teil in match.groups())
+        if teil1 <= 12 and teil2 > 12:
+            try:
+                parsed = pandas.Timestamp(year=jahr, month=teil1, day=teil2)
+            except ValueError:
+                parsed = None
+            if parsed is not None:
+                print(
+                    f'WARNING: Feld "{label}" enthält "{text}" im amerikanischen Datumsformat '
+                    f'(Monat.Tag.Jahr statt Tag.Monat.Jahr), interpretiere automatisch als '
+                    f'{parsed.strftime("%d.%m.%Y")}. Bitte in der Eingabedatei auf deutsches '
+                    f'Format (Tag.Monat.Jahr) korrigieren.'
+                )
+                return parsed
+
+    parsed = pandas.to_datetime(text, dayfirst=True, errors="coerce")
+    if not pandas.isna(parsed):
+        return parsed
+    print(f'ERROR: Feld "{label}" enthält "{text}", das ist kein gültiges Datum.')
+    return None
+
+
 def get_dates(termin1, termin2, label_start="Termin (Start)", label_end="Termin (Ende)"):
-    if pandas.isna(termin1):
+    termin1 = _parse_date(termin1, label_start)
+    if termin1 is None:
         print(f'ERROR: Feld "{label_start}" enthält kein gültiges Datum, "Termine" bleibt leer.')
         return ""
     start = termin1.strftime("%Y-%m-%d")
-    if pandas.isna(termin2):
+    termin2 = _parse_date(termin2, label_end)
+    if termin2 is None:
         print(f'WARNING: Feld "{label_end}" enthält kein gültiges Datum, verwende "{label_start}" auch als Ende.')
         ende = start
     else:
@@ -104,14 +154,16 @@ def get_dates(termin1, termin2, label_start="Termin (Start)", label_end="Termin 
 
 
 def get_date(termin1, label="Datum"):
-    if pandas.isna(termin1):
+    termin1 = _parse_date(termin1, label)
+    if termin1 is None:
         print(f'WARNING: Feld "{label}" enthält kein gültiges Datum, verwende leeren Wert.')
         return ""
     return termin1.strftime("%Y-%m-%d")
 
 
 def get_dates_with_time(datum, zeit_str, label="Termin (Datum)"):
-    if pandas.isna(datum):
+    datum = _parse_date(datum, label)
+    if datum is None:
         print(f'ERROR: Feld "{label}" enthält kein gültiges Datum, "Termine" bleibt leer.')
         return ""
     zeit_str = _clean(zeit_str).strip()
@@ -170,7 +222,8 @@ def get_kategorie_short_code(mapping, kategorie_name):
 def get_key(mapping, titel, kategorie_name, datum, label="Datum"):
     titel_clean = _strip_parentheses_and_spaces(titel)
     short_code = get_kategorie_short_code(mapping, kategorie_name)
-    if pandas.isna(datum):
+    datum = _parse_date(datum, label)
+    if datum is None:
         print(f'ERROR: Feld "{label}" enthält kein gültiges Datum, "key" ist unvollständig.')
         return short_code + titel_clean
     return datum.strftime("%y%m") + short_code + titel_clean
@@ -198,7 +251,8 @@ def get_group_short_code(mapping, name):
 def get_key_groups(mapping, titel, gruppe_name, datum, label="Datum"):
     titel_clean = _strip_parentheses_and_spaces(titel)
     short_code = get_group_short_code(mapping, gruppe_name)
-    if pandas.isna(datum):
+    datum = _parse_date(datum, label)
+    if datum is None:
         print(f'ERROR: Feld "{label}" enthält kein gültiges Datum, "key" ist unvollständig.')
         return short_code + titel_clean
     return short_code + datum.strftime("%y%m") + titel_clean
