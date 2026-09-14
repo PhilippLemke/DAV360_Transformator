@@ -8,6 +8,36 @@
 
 import re
 
+# Spec-Schlüssel, deren Wert kein Spaltenname aus der Eingabedatei ist
+# (sondern ein Literal, eine Tabellenreferenz o.ä.). Alles andere in einer
+# Feld-Spec wird als benötigte Eingabespalte gewertet, siehe
+# required_columns_for_field().
+NON_COLUMN_SPEC_KEYS = {"transform", "value", "table", "wrap", "template", "mandatory", "label", "prefix"}
+
+
+def required_columns_for_field(spec):
+    """Ermittelt, welche Eingabespalten eine einzelne Feld-Spec aus profiles.yaml referenziert."""
+    columns = []
+    for key, val in spec.items():
+        if key in NON_COLUMN_SPEC_KEYS:
+            continue
+        if isinstance(val, list):
+            columns.extend(val)
+        elif isinstance(val, str):
+            columns.append(val)
+    return columns
+
+
+def required_columns_for_variant(variant_spec):
+    """Ermittelt alle von einer Formular-Variante benötigten Eingabespalten (für einen Vorab-Check)."""
+    columns = set()
+    row_filter = variant_spec.get("filter")
+    if row_filter is not None:
+        columns.add(row_filter["column"])
+    for spec in variant_spec.get("fields", {}).values():
+        columns.update(required_columns_for_field(spec))
+    return columns
+
 
 def _clean(value):
     """Wandelt NaN/None/beliebige Werte robust in einen String um."""
