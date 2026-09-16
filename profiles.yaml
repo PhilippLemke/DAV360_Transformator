@@ -188,7 +188,11 @@ veranstaltungen:
     # Sektionsspezifisches Formular "DAV-Trier Eingabeformular Wanderungen - eintägig"
     tr:
       fields:
-        key: {transform: key_touren, title: "Bezeichnung/Titel", kategorie: "Kategorie", date: "Termin (Datum)"}
+        # Systemname abgesprochen mit der Sektion Trier:
+        # "<Jahr> <Formulargruppe> <MonatTag> <Formular-Titel>". Der Titel bleibt eine
+        # 1:1-Kopie von "Bezeichnung/Titel" - die Nutzer:innen tippen dort laut Sektion
+        # bereits im Format "Formulargruppe - Formulartitel", das passt daher schon.
+        key: {transform: key_veranstaltung_gruppe, gruppe: "Gruppe", title: "Bezeichnung/Titel", date: "Termin (Datum)"}
         assignedGroups: {transform: group_fullpath, source: "Gruppe"}
         bookingCode: {transform: direct, source: "Lfd-Nr."}
         title: {transform: direct, source: "Bezeichnung/Titel"}

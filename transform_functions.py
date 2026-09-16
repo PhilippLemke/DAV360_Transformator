@@ -268,6 +268,20 @@ def get_key_buchungscode(buchungscode, titel, datum, label="Datum"):
     return " ".join(teil for teil in (jahr, buchungscode, titel) if teil)
 
 
+def get_key_veranstaltung_gruppe(gruppe_name, titel, datum, label="Datum"):
+    """Systemname für Veranstaltungen: "<Jahr zweistellig> <Formulargruppe> <MonatTag> <Formular-Titel>"
+    (z.B. "26 Familienwanderung 0918 Familienwochenende Manderscheid"), abgesprochen mit der Sektion Trier."""
+    gruppe_name = _clean(gruppe_name).strip()
+    titel = _clean(titel).strip()
+    datum = _parse_date(datum, label)
+    if datum is None:
+        print(f'ERROR: Feld "{label}" enthält kein gültiges Datum, "key" ist unvollständig.')
+        return " ".join(teil for teil in (gruppe_name, titel) if teil)
+    jahr = datum.strftime("%y")
+    monat_tag = datum.strftime("%m%d")
+    return " ".join(teil for teil in (jahr, gruppe_name, monat_tag, titel) if teil)
+
+
 def get_key_groups(mapping, titel, gruppe_name, datum, label="Datum"):
     titel_clean = _strip_parentheses_and_spaces(titel)
     short_code = get_group_short_code(mapping, gruppe_name)
@@ -346,6 +360,9 @@ def dispatch(spec, row, mapping, season_ctx):
 
     if transform == "key_buchungscode":
         return get_key_buchungscode(row.get(spec["buchungscode"]), row.get(spec["title"]), row.get(spec["date"]), spec["date"])
+
+    if transform == "key_veranstaltung_gruppe":
+        return get_key_veranstaltung_gruppe(row.get(spec["gruppe"]), row.get(spec["title"]), row.get(spec["date"]), spec["date"])
 
     if transform == "group_fullpath":
         return get_group_fullpath(mapping, row.get(spec["source"]))
