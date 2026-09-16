@@ -230,15 +230,16 @@ veranstaltungen:
         registerEnd: {transform: date, source: "Anmeldeschluss"}
         destination: {transform: html, source: "Gebirgsgruppe/Region/Ort"}
 
-# Basiert auf dem echten Kurse_export.xlsx (siehe pimcore_exports/) und dem
-# DAV-Trier Kurs-Eingabeformular (siehe formular_imports/). Einige Zielfelder
-# bleiben absichtlich leer, weil das Eingabeformular keine passende Spalte
-# liefert bzw. die Zuordnung noch ungeklärt ist - siehe Fragen.md:
-#   - locations/destination: "Veranstaltungsort" ist im Formular nur
-#     Freitext, das Ziel "locations" erwartet aber einen Pimcore-Objekt-
-#     Fullpath. Wie das aufgelöst werden soll, ist noch offen.
+# Basiert auf dem echten Kurse-Export und dem DAV-Trier Kurs-Eingabeformular.
+# Einige Zielfelder bleiben absichtlich leer, weil das Eingabeformular keine
+# passende Spalte liefert bzw. die Zuordnung noch ungeklärt ist:
+#   - locations: bleibt leer. "Veranstaltungsort" ist im Formular nur Freitext,
+#     das Ziel "locations" erwartet aber einen Pimcore-Objekt-Fullpath. Mit der
+#     Sektion abgesprochen: eine feste Objekt-Zuordnung lohnt nur für wenige
+#     Orte (Hütte/Halle) - dafür fehlt aber noch die Liste. "destination"
+#     wird daher (wie bei touren/veranstaltungen) als Freitext befüllt.
 #   - level: mapping.yaml (kursstufe) enthält nur die Namen, noch keine
-#     echten Pimcore-IDs.
+#     echten Pimcore-IDs (Rückmeldung von der Sektion steht noch aus).
 #   - subtitle, geographicRegions, objectives, contents, equipment,
 #     attachments, images, enquiryForm, arrivalHints,
 #     isPublicTransportAvailable, teaser*: keine Quellspalte im Formular
@@ -300,6 +301,10 @@ kurse:
         datesAlternativeText: {transform: static, value: "<p>&nbsp;</p>"}
         assignedGroups: {transform: group_fullpath, source: "Gruppen"}
         leaders: {transform: leaders, source: "Tourenleitung/Organisation"}
+        # destination = Freitext (mit der Sektion abgesprochen: eine feste
+        # Objekt-Zuordnung lohnt höchstens für Hütte/Halle, dafür fehlt aber
+        # noch die Liste - "locations" bleibt daher weiterhin leer).
+        destination: {transform: html, source: "Veranstaltungsort"}
         season: {transform: season_id}
         requirements: {transform: html, source: "Voraussetzungen"}
         maxNumberOfParticipants: {transform: max_participants, source: "max. Zahl der Teilnehmenden"}
