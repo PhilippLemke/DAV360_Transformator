@@ -53,8 +53,8 @@ def test_output_matches_fixture(loaded_config, typ, variante, input_file, fixtur
             os.remove(out_file)
 
 
-def test_kurse_not_implemented(loaded_config, capsys):
+def test_kurse_unbekannte_variante(loaded_config, capsys):
     config, profiles, mapping = loaded_config
     with pytest.raises(SystemExit):
         transformator.run("kurse", "irgendeine", "egal.xlsx", config, profiles, mapping)
-    assert "noch nicht implementiert" in capsys.readouterr().out
+    assert "Unbekannte Variante" in capsys.readouterr().out
