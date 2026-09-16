@@ -83,10 +83,12 @@ touren:
     # Sektionsspezifisches Formular "DAV-Trier Eingabeformular Touren"
     tr:
       fields:
-        key: {transform: key_touren, title: "Bezeichnung/Titel", kategorie: "Kategorie", date: "Termin (Start)"}
+        # Titel/Systemname abgesprochen mit der Sektion Trier:
+        # Titel = "<Buchungscode> <Formular-Titel>", Systemname = "<Jahr> <Buchungscode> <Formular-Titel>".
+        key: {transform: key_buchungscode, buchungscode: "Lfd-Nr.", title: "Bezeichnung/Titel", date: "Termin (Start)"}
         assignedGroups: {transform: group_fullpath, source: "Gruppen"}
         bookingCode: {transform: direct, source: "Lfd-Nr."}
-        title: {transform: direct, source: "Bezeichnung/Titel"}
+        title: {transform: title_buchungscode, buchungscode: "Lfd-Nr.", title: "Bezeichnung/Titel"}
         category: {transform: lookup, table: kategorie, source: "Kategorie"}
         technique: {transform: lookup, table: technik, source: "Schwierigkeit (Technik)"}
         stamina: {transform: lookup, table: ausdauer, source: "Kondition"}
@@ -282,9 +284,11 @@ kurse:
     # Sektionsspezifisches Formular "DAV-Trier Eingabeformular Kurse"
     tr:
       fields:
-        key: {transform: key_touren, title: "Bezeichnung/Titel", kategorie: "Kategorie", date: "Termin (Start)"}
+        # Titel/Systemname abgesprochen mit der Sektion Trier:
+        # Titel = "<Buchungscode> <Formular-Titel>", Systemname = "<Jahr> <Buchungscode> <Formular-Titel>".
+        key: {transform: key_buchungscode, buchungscode: "Lfd.-Nr.", title: "Bezeichnung/Titel", date: "Termin (Start)"}
         bookingCode: {transform: direct, source: "Lfd.-Nr."}
-        title: {transform: direct, source: "Bezeichnung/Titel"}
+        title: {transform: title_buchungscode, buchungscode: "Lfd.-Nr.", title: "Bezeichnung/Titel"}
         category: {transform: lookup, table: kategorie, source: "Kategorie"}
         level: {transform: lookup, table: kursstufe, source: "Kursstufe"}
         description: {transform: html, source: "Beschreibung"}
