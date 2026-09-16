@@ -5,6 +5,9 @@ pimcore_exports
 # Imports
 formular_imports
 
+# Tempfolder
+tmp
+
 # Lokale, noch offene Fragen (nicht für's Repo bestimmt)
 Fragen.md
 
