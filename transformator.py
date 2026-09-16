@@ -46,6 +46,7 @@ class Mapping:
         self.eventart = data.get("eventart", {})
         self.klassifizierung = data.get("klassifizierung", {})
         self.kursstufe = data.get("kursstufe", {})
+        self.bookingstate = data.get("bookingstate", {})
         self.tourenfuehrer = data.get("tourenfuehrer", {})
         self.gruppen = data.get("gruppen", {})
         self.gruppe_kategorie = data.get("gruppe_kategorie", {})

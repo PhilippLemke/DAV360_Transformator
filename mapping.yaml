@@ -2,11 +2,14 @@
 # Ersetzt die frühere Keys.xlsx 1:1 als YAML. Diese Datei muss pro Sektion
 # angepasst werden (IDs kommen aus dem Pimcore-Redaktionstool).
 #
-# Die IDs unter kategorie/technik/ausdauer/saison/eventart/klassifizierung
-# sind echte Produktions-IDs der Sektion Trier (264) - abgeglichen mit den
-# realen Pimcore-Exporten unter pimcore_exports/. Nur die Personendaten
-# (tourenfuehrer: Max Mustermann / Erika Musterfrau) sind Platzhalter, damit
-# die Beispieldatensätze in dummy_daten/ direkt funktionieren.
+# Die IDs unter kategorie/technik/ausdauer/saison/eventart/klassifizierung/
+# gruppen sind echte Produktions-IDs bzw. Pfade der Sektion Trier (264) -
+# abgeglichen mit den realen Pimcore-Exporten bzw. den von der Sektion per
+# Mail gelieferten Stammdaten. Die Personendaten (tourenfuehrer: Max
+# Mustermann / Erika Musterfrau) sind Platzhalter, damit die
+# Beispieldatensätze in dummy_daten/ direkt funktionieren. kursstufe,
+# bookingstate und gruppe_kategorie sind noch unvollständig/Platzhalter -
+# siehe die TODO-Kommentare bei den jeweiligen Tabellen unten.
 
 kategorie:
   Bergsteigen: {id: 417, short_code: BS}
@@ -60,14 +63,34 @@ klassifizierung:
   Gemeinschaftstour: 398
   Ausbildungstour: 39481
 
-# TODO (siehe Fragen.md): IDs noch unbekannt. Der reale Kurse-Export zeigt
+# TODO: IDs noch unbekannt. Der reale Kurse-Export zeigt
 # fünf verschiedene level-IDs (399, 400, 402, 403, 404), aus dem
 # DAV-Trier-Kursformular sind bisher nur die Namen "Grundkurs" und
 # "Spezialkurs" bekannt - welcher Name zu welcher ID gehört und wie die
 # übrigen Kursstufen heißen, muss noch aus Pimcore nachgetragen werden.
+# Stand 16.09.2026: trotz "Done" in der Mail-Antwort der Sektion enthält die
+# mitgeschickte Stammdaten-Tabelle keine passende Liste dafür (die IDs
+# 399-404 kommen dort nirgends vor) - vermutlich die "eine Abfrage [die] noch
+# läuft" aus derselben Mail. Bitte bei der Sektion nachfassen und die fünf
+# Namen mit IDs nachreichen lassen.
 kursstufe:
   Grundkurs: null
   Spezialkurs: null
+
+# TODO: IDs noch unbekannt. Reale Exporte zeigen die
+# bookingState-IDs 389, 390, 391, 73405 (Kurse), 389, 73405 (Touren), 390
+# (Veranstaltungen) - welcher Buchungsstatus (z.B. "Buchung möglich",
+# "ausgebucht", "auf Warteliste") zu welcher ID gehört, ist noch offen.
+# Ebenfalls nicht in den gelieferten Stammdaten enthalten (siehe Hinweis bei
+# kursstufe oben) - die Sektion wollte die Stati noch heraussuchen und hat zusätzlich
+# vorgeschlagen, bei Kursen mit <10 freien Plätzen automatisch einen
+# "nur noch wenige Plätze"-Status zu setzen. Bis die IDs vorliegen, bleibt
+# bookingState in profiles.yaml weiterhin auf "" (leer) gesetzt.
+bookingstate:
+  "Buchung möglich": null
+  "ausgebucht": null
+  "auf Warteliste": null
+  "nur noch wenige Plätze verfügbar": null
 
 # Tourenführer:innen / Leiter:innen. Der Name muss exakt so eingetragen sein,
 # wie er im Eingabeformular geschrieben wird (Vorname Nachname).
@@ -129,6 +152,16 @@ gruppen:
 # Feste Zuordnung: wenn eine Tour/Veranstaltung einer festen Gruppe zugeordnet
 # ist, welche Kategorie (siehe oben) bekommt sie automatisch zugewiesen.
 # Nur für Gruppen mit fester Sportart relevant, sonst leer lassen.
+#
+# TODO: Die Gruppennamen/Kategorien unten sind noch
+# Platzhalter aus dem Fork-Original und passen nicht zu den echten Trier-
+# Gruppen (siehe Tabelle "gruppen" oben) oder Kategorien (siehe "kategorie"
+# oben) - ohne Treffer liefert get_kategorie_for_gruppe() ohnehin nur "".
+# Die Sektion hat für Kurse eine umgekehrte Zuordnung vorgeschlagen (Gruppe
+# automatisch aus der Kategorie ableiten statt aus der Formular-Spalte
+# "Gruppen") und einen "Zuordnungsaufschlag" (Vorschlag) angekündigt - der
+# ist noch nicht eingetroffen. Bis dahin bleibt assignedGroups bei Kursen wie
+# gehabt aus der Formular-Spalte "Gruppen" befüllt (siehe profiles.yaml).
 gruppe_kategorie:
   Mountainbike: Mountainbike
   Mankeis: Familien
