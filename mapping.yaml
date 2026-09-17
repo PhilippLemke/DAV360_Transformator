@@ -3,32 +3,39 @@
 # angepasst werden (IDs kommen aus dem Pimcore-Redaktionstool).
 #
 # Die IDs unter kategorie/technik/ausdauer/saison/eventart/klassifizierung/
-# gruppen sind echte Produktions-IDs bzw. Pfade der Sektion Trier (264) -
-# abgeglichen mit den realen Pimcore-Exporten bzw. den von der Sektion per
-# Mail gelieferten Stammdaten. Die Personendaten (tourenfuehrer: Max
-# Mustermann / Erika Musterfrau) sind Platzhalter, damit die
-# Beispieldatensätze in dummy_daten/ direkt funktionieren. kursstufe,
-# bookingstate und gruppe_kategorie sind noch unvollständig/Platzhalter -
-# siehe die TODO-Kommentare bei den jeweiligen Tabellen unten.
+# gruppen/kursstufe/bookingstate sind echte Produktions-IDs bzw. Pfade der
+# Sektion Trier (264) - abgeglichen mit den realen Pimcore-Exporten bzw. den
+# von der Sektion per Mail gelieferten Stammdaten. Die Personendaten
+# (tourenfuehrer: Max Mustermann / Erika Musterfrau) sind Platzhalter, damit
+# die Beispieldatensätze in dummy_daten/ direkt funktionieren. gruppe_kategorie
+# ist weiterhin unvollständig/Platzhalter - siehe den Kommentar bei der
+# Tabelle unten.
 
+# "gruppe" ist die von der Sektion vorgeschlagene feste Kategorie→Gruppe-
+# Zuordnung (Antwort vom 16.09.2026, Blatt "Kategorie" in Keys.xlsx, Spalte
+# "Gruppenzuprdnung"). Wird aktuell von keinem Transform verwendet - noch
+# offen ist, ob/wo Gruppen künftig automatisch aus der Kategorie abgeleitet
+# werden sollen (siehe Fragen.md, Punkt 4) statt wie bisher aus der
+# jeweiligen Formular-Spalte "Gruppe(n)".
 kategorie:
-  Bergsteigen: {id: 417, short_code: BS}
-  Bergwandern: {id: 418, short_code: BW}
-  Bouldern: {id: 419, short_code: BOU}
-  Hochtouren: {id: 420, short_code: HT}
-  Hochtour: {id: 420, short_code: HT} # Alias, manche Formulare nutzen die Einzahl
-  Klettern: {id: 421, short_code: KLE}
-  Klettersteig: {id: 422, short_code: KS}
-  Mountainbike: {id: 423, short_code: MTB}
-  Radtour: {id: 35246, short_code: RT}
-  Schneeschuhgehen: {id: 424, short_code: SSG}
-  Ski alpin: {id: 871, short_code: SKI}
-  Skihochtour: {id: 22965, short_code: SHT}
-  Skilanglauf: {id: 425, short_code: SLL}
-  Skitour: {id: 426, short_code: ST}
-  Wandern: {id: 2284, short_code: WAN}
-  Wettkampf: {id: 39348, short_code: WK}
-  Veranstaltung: {id: null, short_code: VA}
+  Bergsteigen: {id: 417, short_code: BS, gruppe: "/264 - Sektion Trier/Gruppen/Bergsteigen"}
+  Bergwandern: {id: 418, short_code: BW, gruppe: "/264 - Sektion Trier/Gruppen/Wandergruppe"}
+  Bouldern: {id: 419, short_code: BOU, gruppe: "/264 - Sektion Trier/Gruppen/Klettern"}
+  Hochtouren: {id: 420, short_code: HT, gruppe: "/264 - Sektion Trier/Gruppen/Bergsteigen"}
+  Hochtour: {id: 420, short_code: HT, gruppe: "/264 - Sektion Trier/Gruppen/Bergsteigen"} # Alias, manche Formulare nutzen die Einzahl
+  Klettern: {id: 421, short_code: KLE, gruppe: "/264 - Sektion Trier/Gruppen/Klettern"}
+  Klettersteig: {id: 422, short_code: KS, gruppe: "/264 - Sektion Trier/Gruppen/Klettern"}
+  Mountainbike: {id: 423, short_code: MTB, gruppe: "/264 - Sektion Trier/Gruppen/Mountainbiken"}
+  Radtour: {id: 35246, short_code: RT, gruppe: "/264 - Sektion Trier/Gruppen/Mountainbiken"}
+  Schneeschuhgehen: {id: 424, short_code: SSG, gruppe: null}
+  Ski alpin: {id: 871, short_code: SKI, gruppe: null}
+  Skihochtour: {id: 22965, short_code: SHT, gruppe: null}
+  Skilanglauf: {id: 425, short_code: SLL, gruppe: null}
+  Skitour: {id: 426, short_code: ST, gruppe: null}
+  Wandern: {id: 2284, short_code: WAN, gruppe: "/264 - Sektion Trier/Gruppen/Wandergruppe"}
+  Wettkampf: {id: 39348, short_code: WK, gruppe: "/264 - Sektion Trier/Gruppen/Leistungskader"}
+  Veranstaltung: {id: null, short_code: VA, gruppe: null}
+  Mountaindogs: {id: 158131, short_code: MTD, gruppe: "/264 - Sektion Trier/Gruppen/Mountaindogs"}
 
 technik:
   leicht: 413
@@ -63,34 +70,30 @@ klassifizierung:
   Gemeinschaftstour: 398
   Ausbildungstour: 39481
 
-# TODO: IDs noch unbekannt. Der reale Kurse-Export zeigt
-# fünf verschiedene level-IDs (399, 400, 402, 403, 404), aus dem
-# DAV-Trier-Kursformular sind bisher nur die Namen "Grundkurs" und
-# "Spezialkurs" bekannt - welcher Name zu welcher ID gehört und wie die
-# übrigen Kursstufen heißen, muss noch aus Pimcore nachgetragen werden.
-# Stand 16.09.2026: trotz "Done" in der Mail-Antwort der Sektion enthält die
-# mitgeschickte Stammdaten-Tabelle keine passende Liste dafür (die IDs
-# 399-404 kommen dort nirgends vor) - vermutlich die "eine Abfrage [die] noch
-# läuft" aus derselben Mail. Bitte bei der Sektion nachfassen und die fünf
-# Namen mit IDs nachreichen lassen.
+# Nachgereicht von der Sektion am 16.09.2026 (Blatt "Kursstufen" in
+# Keys.xlsx). Sechs statt der ursprünglich im Export gesehenen fünf IDs -
+# 401 "Schnupperkurs" kam in den bisherigen Beispiel-Exporten schlicht nicht
+# vor.
 kursstufe:
-  Grundkurs: null
-  Spezialkurs: null
+  Aufbaukurs: 399
+  Grundkurs: 400
+  Schnupperkurs: 401
+  Sonderkurs: 402
+  Spezialkurs: 403
+  Training: 404
 
-# TODO: IDs noch unbekannt. Reale Exporte zeigen die
-# bookingState-IDs 389, 390, 391, 73405 (Kurse), 389, 73405 (Touren), 390
-# (Veranstaltungen) - welcher Buchungsstatus (z.B. "Buchung möglich",
-# "ausgebucht", "auf Warteliste") zu welcher ID gehört, ist noch offen.
-# Ebenfalls nicht in den gelieferten Stammdaten enthalten (siehe Hinweis bei
-# kursstufe oben) - die Sektion wollte die Stati noch heraussuchen und hat zusätzlich
-# vorgeschlagen, bei Kursen mit <10 freien Plätzen automatisch einen
-# "nur noch wenige Plätze"-Status zu setzen. Bis die IDs vorliegen, bleibt
-# bookingState in profiles.yaml weiterhin auf "" (leer) gesetzt.
+# IDs nachgereicht von der Sektion am 16.09.2026 (Blatt "buchungsstati" in
+# Keys.xlsx) - die Namen weichen von unseren ursprünglich geratenen
+# Platzhaltern ab (z.B. "frei" statt "Buchung möglich"). Die eigentliche
+# Verwendung (bookingState in profiles.yaml) ist weiterhin nicht verdrahtet:
+# offen ist noch, ob/wie der von der Sektion vorgeschlagene automatische
+# "wenige frei"-Status bei <10 freien Plätzen umgesetzt werden soll (siehe
+# Fragen.md, Punkt 3).
 bookingstate:
-  "Buchung möglich": null
-  "ausgebucht": null
-  "auf Warteliste": null
-  "nur noch wenige Plätze verfügbar": null
+  ausgebucht: 389
+  frei: 390
+  Warteliste: 73405
+  wenige frei: 391
 
 # Tourenführer:innen / Leiter:innen. Der Name muss exakt so eingetragen sein,
 # wie er im Eingabeformular geschrieben wird (Vorname Nachname).
