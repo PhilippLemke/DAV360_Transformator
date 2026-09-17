@@ -9,14 +9,22 @@ Konvertiert Touren- und Veranstaltungs-Eingabeformulare (Excel) für den Import 
 
 # Setup
 
+## Windows
+```bash
+git clone https://github.com/PhilippLemke/DAV360_Transformator.git
+cd DAV360_Transformator
+python -m venv venv
+source venv\Scripts\activate
+pip install -r requirements.txt
+```
+## Linux / Mac
 ```bash
 git clone https://github.com/PhilippLemke/DAV360_Transformator.git
 cd DAV360_Transformator
 python3 -m venv venv
-source venv/bin/activate   # Windows: venv\Scripts\activate
+source venv/bin/activate
 pip install -r requirements.txt
 ```
-
 # Transformator ausführen
 
 ```bash
