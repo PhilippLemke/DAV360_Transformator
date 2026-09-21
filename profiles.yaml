@@ -238,10 +238,9 @@ veranstaltungen:
 #   - locations: bleibt leer. "Veranstaltungsort" ist im Formular nur Freitext,
 #     das Ziel "locations" erwartet aber einen Pimcore-Objekt-Fullpath. Mit der
 #     Sektion abgesprochen: eine feste Objekt-Zuordnung lohnt nur für wenige
-#     Orte (Hütte/Halle) - dafür fehlt aber noch die Liste. "destination"
-#     wird daher (wie bei touren/veranstaltungen) als Freitext befüllt.
-#   - level: mapping.yaml (kursstufe) enthält nur die Namen, noch keine
-#     echten Pimcore-IDs (Rückmeldung von der Sektion steht noch aus).
+#     Orte (Hütte/Halle) - für die Liste fehlen noch die Pimcore-Fullpaths.
+#     "destination" wird daher (wie bei touren/veranstaltungen) als Freitext
+#     befüllt.
 #   - subtitle, geographicRegions, objectives, contents, equipment,
 #     attachments, images, enquiryForm, arrivalHints,
 #     isPublicTransportAvailable, teaser*: keine Quellspalte im Formular

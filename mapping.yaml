@@ -81,12 +81,8 @@ kursstufe:
   Training: 404
 
 # IDs nachgereicht von der Sektion am 16.09.2026 (Blatt "buchungsstati" in
-# Keys.xlsx) - die Namen weichen von unseren ursprünglich geratenen
-# Platzhaltern ab (z.B. "frei" statt "Buchung möglich"). Die eigentliche
-# Verwendung (bookingState in profiles.yaml) ist weiterhin nicht verdrahtet:
-# offen ist noch, ob/wie der von der Sektion vorgeschlagene automatische
-# "wenige frei"-Status bei <10 freien Plätzen umgesetzt werden soll (siehe
-# Fragen.md, Punkt 3).
+# Keys.xlsx). Verwendet von bookingState (profiles.yaml, Transform
+# booking_state): "wenige frei" bei höchstens 10 maximalen Teilnehmenden.
 bookingstate:
   ausgebucht: 389
   frei: 390
@@ -158,11 +154,8 @@ gruppen:
 # Platzhalter aus dem Fork-Original und passen nicht zu den echten Trier-
 # Gruppen (siehe Tabelle "gruppen" oben) oder Kategorien (siehe "kategorie"
 # oben) - ohne Treffer liefert get_kategorie_for_gruppe() ohnehin nur "".
-# Die Sektion hat für Kurse eine umgekehrte Zuordnung vorgeschlagen (Gruppe
-# automatisch aus der Kategorie ableiten statt aus der Formular-Spalte
-# "Gruppen") und einen "Zuordnungsaufschlag" (Vorschlag) angekündigt - der
-# ist noch nicht eingetroffen. Bis dahin bleibt assignedGroups bei Kursen wie
-# gehabt aus der Formular-Spalte "Gruppen" befüllt (siehe profiles.yaml).
+# Für Touren/Kurse (Variante "tr") gilt die umgekehrte Richtung: dort wird die
+# Gruppe aus der Kategorie abgeleitet (siehe "kategorie.*.gruppe" oben).
 gruppe_kategorie:
   Mountainbike: Mountainbike
   Mankeis: Familien
