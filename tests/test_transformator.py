@@ -92,6 +92,23 @@ def test_kategorie_gruppe(loaded_config, kategorie, expected):
     assert tf.get_kategorie_gruppe_fullpath(mapping, kategorie) == expected
 
 
+def test_zusatz_mapping_ergaenzt_und_ueberschreibt_eintraege(tmp_path):
+    basis = tmp_path / "basis.yaml"
+    basis.write_text("technik: {leicht: 1, mittel: 2}\nleiter: {A: {id: 1}}\n", encoding="utf-8")
+    zusatz = tmp_path / "zusatz.yaml"
+    zusatz.write_text("technik: {mittel: 20}\nleiter: {B: {id: 2}}\nneu: {x: 1}\n", encoding="utf-8")
+    data = transformator.load_mapping_data(str(basis), str(zusatz))
+    assert data["technik"] == {"leicht": 1, "mittel": 20}
+    assert data["leiter"] == {"A": {"id": 1}, "B": {"id": 2}}
+    assert data["neu"] == {"x": 1}
+
+
+def test_ohne_zusatz_mapping_bleibt_basis_unveraendert(tmp_path):
+    basis = tmp_path / "basis.yaml"
+    basis.write_text("technik: {leicht: 1}\n", encoding="utf-8")
+    assert transformator.load_mapping_data(str(basis)) == {"technik": {"leicht": 1}}
+
+
 def test_kurse_unbekannte_variante(loaded_config, capsys):
     config, profiles, mapping = loaded_config
     with pytest.raises(SystemExit):

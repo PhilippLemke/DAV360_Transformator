@@ -34,6 +34,9 @@ python transformator.py <typ> --variante <variante> <eingabedatei.xlsx>
 - `<typ>`: `touren`, `veranstaltungen` oder `kurse`
 - `<variante>`: welches Eingabeformular verwendet wurde - je nach Typ `tak`, `tr` oder `gruppen`
   (`tak` = ursprüngliches Formular aus dem Fork-Original, `tr` = Sektion-Trier-eigenes Formular)
+- `--zusatz-mapping <datei.yaml>` (optional): ergänzt bzw. überschreibt Einträge der Tabellen aus `mapping.yaml`.
+  Gedacht für Stammdaten, die nicht ins Repo sollen, z.B. die Tourenführer:innen mit echten Namen. Die Datei
+  hat denselben Aufbau wie `mapping.yaml` und braucht nur die Tabellen, die ergänzt werden sollen.
 
 Beispiele mit den mitgelieferten Beispieldatensätzen:
 

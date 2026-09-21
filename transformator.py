@@ -35,6 +35,23 @@ def load_yaml(path):
         return yaml.safe_load(f)
 
 
+def load_mapping_data(path, extra_path=None):
+    """Lädt die Stammdaten und ergänzt sie optional um eine zusätzliche Datei.
+
+    Die zusätzliche Datei (z.B. mit echten Personendaten, die nicht ins Repo sollen)
+    überschreibt bzw. ergänzt einzelne Einträge der gleichnamigen Tabellen."""
+    data = load_yaml(path) or {}
+    if extra_path is None:
+        return data
+    for table, entries in (load_yaml(extra_path) or {}).items():
+        if isinstance(entries, dict) and isinstance(data.get(table), dict):
+            data[table].update(entries)
+        else:
+            data[table] = entries
+    print(f"Zusätzliche Stammdaten geladen: {extra_path}")
+    return data
+
+
 class Mapping:
     """Sektionsspezifische Stammdaten aus mapping.yaml (ersetzt Keys.xlsx)."""
 
@@ -176,6 +193,11 @@ def parse_args(argv=None):
     parser.add_argument("typ", help="z.B. touren, veranstaltungen, kurse")
     parser.add_argument("--variante", required=True, help="z.B. msf, tr, gruppen")
     parser.add_argument("eingabedatei", help="Pfad zur Eingabe-Exceldatei")
+    parser.add_argument(
+        "--zusatz-mapping",
+        metavar="DATEI",
+        help="Optionale YAML-Datei, die die Stammdaten aus dem mapping_file ergänzt (z.B. Tourenführer mit echten Namen)",
+    )
     return parser.parse_args(argv)
 
 
@@ -183,7 +205,7 @@ def main(argv=None):
     args = parse_args(argv)
     config = load_yaml("config.yaml")
     profiles = load_yaml(config.get("profiles_file", "profiles.yaml"))
-    mapping = Mapping(load_yaml(config.get("mapping_file", "mapping.yaml")))
+    mapping = Mapping(load_mapping_data(config.get("mapping_file", "mapping.yaml"), args.zusatz_mapping))
     run(args.typ, args.variante, args.eingabedatei, config, profiles, mapping)
 
 

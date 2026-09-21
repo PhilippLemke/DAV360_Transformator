@@ -59,3 +59,6 @@ wheels/
 
 # OS
 .env
+
+# Lokale Stammdaten mit echten Personendaten (nicht für das Repo)
+mapping_lokal.yaml
