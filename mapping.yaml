@@ -11,12 +11,10 @@
 # ist weiterhin unvollständig/Platzhalter - siehe den Kommentar bei der
 # Tabelle unten.
 
-# "gruppe" ist die von der Sektion vorgeschlagene feste Kategorie→Gruppe-
-# Zuordnung (Antwort vom 16.09.2026, Blatt "Kategorie" in Keys.xlsx, Spalte
-# "Gruppenzuprdnung"). Wird aktuell von keinem Transform verwendet - noch
-# offen ist, ob/wo Gruppen künftig automatisch aus der Kategorie abgeleitet
-# werden sollen (siehe Fragen.md, Punkt 4) statt wie bisher aus der
-# jeweiligen Formular-Spalte "Gruppe(n)".
+# "gruppe" ist die mit der Sektion abgestimmte feste Kategorie→Gruppe-
+# Zuordnung (Blatt "Kategorie" in Keys.xlsx, Stand 21.09.2026). Sie füllt
+# assignedGroups bei Touren und Kursen (Variante "tr") anhand der Kategorie;
+# "null" = keine Verknüpfung (z.B. alle Ski-Kategorien).
 kategorie:
   Bergsteigen: {id: 417, short_code: BS, gruppe: "/264 - Sektion Trier/Gruppen/Bergsteigen"}
   Bergwandern: {id: 418, short_code: BW, gruppe: "/264 - Sektion Trier/Gruppen/Wandergruppe"}
@@ -24,7 +22,7 @@ kategorie:
   Hochtouren: {id: 420, short_code: HT, gruppe: "/264 - Sektion Trier/Gruppen/Bergsteigen"}
   Hochtour: {id: 420, short_code: HT, gruppe: "/264 - Sektion Trier/Gruppen/Bergsteigen"} # Alias, manche Formulare nutzen die Einzahl
   Klettern: {id: 421, short_code: KLE, gruppe: "/264 - Sektion Trier/Gruppen/Klettern"}
-  Klettersteig: {id: 422, short_code: KS, gruppe: "/264 - Sektion Trier/Gruppen/Klettern"}
+  Klettersteig: {id: 422, short_code: KS, gruppe: "/264 - Sektion Trier/Gruppen/Bergsteigen"}
   Mountainbike: {id: 423, short_code: MTB, gruppe: "/264 - Sektion Trier/Gruppen/Mountainbiken"}
   Radtour: {id: 35246, short_code: RT, gruppe: "/264 - Sektion Trier/Gruppen/Mountainbiken"}
   Schneeschuhgehen: {id: 424, short_code: SSG, gruppe: null}
