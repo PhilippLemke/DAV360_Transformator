@@ -8,6 +8,7 @@ import os
 import openpyxl
 import pytest
 
+import transform_functions as tf
 import transformator
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -16,6 +17,7 @@ FIXTURES = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fixtures", 
 CASES = [
     ("touren", "tak", "dummy_daten/touren_tak_beispiel.xlsx", "touren_tak.xlsx"),
     ("touren", "tr", "dummy_daten/touren_tr_beispiel.xlsx", "touren_tr.xlsx"),
+    ("kurse", "tr", "dummy_daten/kurse_tr_beispiel.xlsx", "kurse_tr.xlsx"),
     ("veranstaltungen", "tr", "dummy_daten/veranstaltungen_tr_beispiel.xlsx", "veranstaltungen_tr.xlsx"),
     ("touren", "gruppen", "dummy_daten/gruppen_beispiel.xlsx", "gruppen_touren.xlsx"),
     ("veranstaltungen", "gruppen", "dummy_daten/gruppen_beispiel.xlsx", "gruppen_veranstaltungen.xlsx"),
@@ -51,6 +53,27 @@ def test_output_matches_fixture(loaded_config, typ, variante, input_file, fixtur
     finally:
         if os.path.exists(out_file):
             os.remove(out_file)
+
+
+@pytest.mark.parametrize(
+    "raw,expected",
+    [
+        ("8", 391),
+        ("10", 391),
+        (10, 391),
+        ("10 Personen", 391),
+        ("11", ""),
+        ("12", ""),
+        ("unbegrenzt", ""),
+        ("", ""),
+        (None, ""),
+        (float("nan"), ""),
+        ("abc", ""),
+    ],
+)
+def test_booking_state_wenige_frei_ab_maximal_10_teilnehmern(loaded_config, raw, expected):
+    _, _, mapping = loaded_config
+    assert tf.get_booking_state(mapping, raw, 10, "wenige frei") == expected
 
 
 def test_kurse_unbekannte_variante(loaded_config, capsys):

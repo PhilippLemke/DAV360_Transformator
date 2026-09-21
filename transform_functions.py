@@ -14,7 +14,7 @@ import pandas
 # (sondern ein Literal, eine Tabellenreferenz o.ä.). Alles andere in einer
 # Feld-Spec wird als benötigte Eingabespalte gewertet, siehe
 # required_columns_for_field().
-NON_COLUMN_SPEC_KEYS = {"transform", "value", "table", "wrap", "template", "mandatory", "label", "prefix"}
+NON_COLUMN_SPEC_KEYS = {"transform", "value", "table", "wrap", "template", "mandatory", "label", "prefix", "threshold", "status"}
 
 
 def required_columns_for_field(spec):
@@ -79,6 +79,24 @@ def get_numbers_from_string(raw, label="_", mandatory=False):
 
 def get_max_participants(raw):
     return get_numbers_from_string(raw, "max. Zahl der Teilnehmenden", mandatory=True)
+
+
+def get_booking_state(mapping, raw, threshold, status_name, label="max. Zahl der Teilnehmenden"):
+    """bookingState anhand der maximalen Teilnehmerzahl.
+
+    Wird eine Tour/ein Kurs für höchstens `threshold` Personen angeboten, steht direkt
+    `status_name` (z.B. "wenige frei") auf der Webseite (Erwartungsmanagement, abgesprochen
+    mit der Sektion Trier). Sonst bleibt der Status leer und wird weiterhin in Pimcore
+    gepflegt. Eine leere/unlesbare Angabe ergibt ebenfalls keinen Status."""
+    if not _clean(raw).strip():
+        return ""
+    try:
+        max_teilnehmer = float(str(get_numbers_from_string(raw, label)).replace(",", "."))
+    except ValueError:
+        return ""
+    if 0 < max_teilnehmer <= threshold:
+        return lookup_id(mapping, "bookingstate", status_name)
+    return ""
 
 
 def get_ja_nein(text):
@@ -366,6 +384,9 @@ def dispatch(spec, row, mapping, season_ctx):
 
     if transform == "group_fullpath":
         return get_group_fullpath(mapping, row.get(spec["source"]))
+
+    if transform == "booking_state":
+        return get_booking_state(mapping, row.get(spec["source"]), spec["threshold"], spec["status"], spec["source"])
 
     if transform == "group_image":
         return get_group_image(mapping, row.get(spec["source"]))

@@ -105,7 +105,7 @@ touren:
         classification: {transform: lookup, table: klassifizierung, source: "Klassifizierung"}
         maxNumberOfParticipants: {transform: max_participants, source: "max. Zahl der Teilnehmenden"}
         previewDiscussion: {transform: html, source: "Vorbesprechung"}
-        bookingState: {transform: static, value: ""}
+        bookingState: {transform: booking_state, source: "max. Zahl der Teilnehmenden", threshold: 10, status: "wenige frei"}
         registerEnd: {transform: date, source: "Anmeldeschluss"}
         registration: {transform: html, source: "Bemerkungen"}
         meetingPoint: {transform: static, value: ""}
@@ -308,7 +308,7 @@ kurse:
         season: {transform: season_id}
         requirements: {transform: html, source: "Voraussetzungen"}
         maxNumberOfParticipants: {transform: max_participants, source: "max. Zahl der Teilnehmenden"}
-        bookingState: {transform: static, value: ""}
+        bookingState: {transform: booking_state, source: "max. Zahl der Teilnehmenden", threshold: 10, status: "wenige frei"}
         prices:
           transform: template
           sources: ["Preis"]
