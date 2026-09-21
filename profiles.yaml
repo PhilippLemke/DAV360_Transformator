@@ -86,7 +86,9 @@ touren:
         # Titel/Systemname abgesprochen mit der Sektion Trier:
         # Titel = "<Buchungscode> <Formular-Titel>", Systemname = "<Jahr> <Buchungscode> <Formular-Titel>".
         key: {transform: key_buchungscode, buchungscode: "Lfd-Nr.", title: "Bezeichnung/Titel", date: "Termin (Start)"}
-        assignedGroups: {transform: group_fullpath, source: "Gruppen"}
+        # Gruppe wird aus der Kategorie abgeleitet (mapping.yaml, kategorie.*.gruppe), nicht mehr
+        # aus der Formularspalte "Gruppen" - so mit der Sektion Trier abgesprochen.
+        assignedGroups: {transform: kategorie_gruppe, source: "Kategorie"}
         bookingCode: {transform: direct, source: "Lfd-Nr."}
         title: {transform: title_buchungscode, buchungscode: "Lfd-Nr.", title: "Bezeichnung/Titel"}
         category: {transform: lookup, table: kategorie, source: "Kategorie"}
@@ -299,7 +301,9 @@ kurse:
         description: {transform: html, source: "Beschreibung"}
         Termine: {transform: dates_range, start: "Termin (Start)", end: "Termin (Ende)"}
         datesAlternativeText: {transform: static, value: "<p>&nbsp;</p>"}
-        assignedGroups: {transform: group_fullpath, source: "Gruppen"}
+        # Gruppe wird aus der Kategorie abgeleitet (mapping.yaml, kategorie.*.gruppe), nicht mehr
+        # aus der Formularspalte "Gruppen" - so mit der Sektion Trier abgesprochen.
+        assignedGroups: {transform: kategorie_gruppe, source: "Kategorie"}
         leaders: {transform: leaders, source: "Tourenleitung/Organisation"}
         # destination = Freitext (mit der Sektion abgesprochen: eine feste
         # Objekt-Zuordnung lohnt höchstens für Hütte/Halle, dafür fehlt aber

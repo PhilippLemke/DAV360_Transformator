@@ -76,6 +76,22 @@ def test_booking_state_wenige_frei_ab_maximal_10_teilnehmern(loaded_config, raw,
     assert tf.get_booking_state(mapping, raw, 10, "wenige frei") == expected
 
 
+@pytest.mark.parametrize(
+    "kategorie,expected",
+    [
+        ("Klettersteig", "/264 - Sektion Trier/Gruppen/Bergsteigen"),
+        ("Hochtour", "/264 - Sektion Trier/Gruppen/Bergsteigen"),
+        ("Wandern", "/264 - Sektion Trier/Gruppen/Wandergruppe"),
+        ("Skitour", ""),  # bewusst keine Verknüpfung (gruppe: null)
+        ("Gibt es nicht", ""),
+        (None, ""),
+    ],
+)
+def test_kategorie_gruppe(loaded_config, kategorie, expected):
+    _, _, mapping = loaded_config
+    assert tf.get_kategorie_gruppe_fullpath(mapping, kategorie) == expected
+
+
 def test_kurse_unbekannte_variante(loaded_config, capsys):
     config, profiles, mapping = loaded_config
     with pytest.raises(SystemExit):

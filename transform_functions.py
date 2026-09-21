@@ -237,6 +237,18 @@ def get_kategorie_short_code(mapping, kategorie_name):
     return entry.get("short_code", "")
 
 
+def get_kategorie_gruppe_fullpath(mapping, kategorie_name):
+    """Pimcore-Fullpath der Gruppe, die der Sektion zufolge fest zu einer Kategorie gehört.
+
+    Kategorien ohne feste Gruppe (z.B. Ski) sind in mapping.yaml mit "gruppe: null"
+    hinterlegt und liefern bewusst einen leeren Wert ohne Warnung."""
+    entry = mapping.kategorie.get(_clean(kategorie_name))
+    if entry is None:
+        print(f'WARNING: Kategorie "{kategorie_name}" nicht in mapping.yaml (kategorie) gefunden.')
+        return ""
+    return entry.get("gruppe") or ""
+
+
 def get_key(mapping, titel, kategorie_name, datum, label="Datum"):
     titel_clean = _strip_parentheses_and_spaces(titel)
     short_code = get_kategorie_short_code(mapping, kategorie_name)
@@ -384,6 +396,9 @@ def dispatch(spec, row, mapping, season_ctx):
 
     if transform == "group_fullpath":
         return get_group_fullpath(mapping, row.get(spec["source"]))
+
+    if transform == "kategorie_gruppe":
+        return get_kategorie_gruppe_fullpath(mapping, row.get(spec["source"]))
 
     if transform == "booking_state":
         return get_booking_state(mapping, row.get(spec["source"]), spec["threshold"], spec["status"], spec["source"])
