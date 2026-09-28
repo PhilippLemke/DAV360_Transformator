@@ -114,3 +114,20 @@ def test_kurse_unbekannte_variante(loaded_config, capsys):
     with pytest.raises(SystemExit):
         transformator.run("kurse", "irgendeine", "egal.xlsx", config, profiles, mapping)
     assert "Unbekannte Variante" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("start,ende,expected", [
+    ("10.05.2026", None, "[dates]2026-05-10 00:00:00"),
+    ("10.05.2026", "10.05.2026", "[dates]2026-05-10 00:00:00"),
+    ("18.07.2026", "20.07.2026", "[dates]2026-07-18 00:00:00 bis 2026-07-20 00:00:00"),
+])
+def test_termine_ohne_ende_nur_mit_start(start, ende, expected):
+    assert tf.get_dates(start, ende) == expected
+
+
+@pytest.mark.parametrize("zeit,expected", [
+    ("18:30", "[dates]2026-06-12 18:30:00"),
+    (None, "[dates]2026-06-12 00:00:00"),
+])
+def test_termin_mit_uhrzeit_ohne_ende(zeit, expected):
+    assert tf.get_dates_with_time("12.06.2026", zeit) == expected

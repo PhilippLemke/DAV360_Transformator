@@ -161,14 +161,13 @@ def get_dates(termin1, termin2, label_start="Termin (Start)", label_end="Termin 
     if termin1 is None:
         print(f'ERROR: Feld "{label_start}" enthält kein gültiges Datum, "Termine" bleibt leer.')
         return ""
-    start = termin1.strftime("%Y-%m-%d")
+    start = f'{termin1.strftime("%Y-%m-%d")} 00:00:00'
+    # Ohne (gültiges) Ende bzw. bei eintägigen Terminen nur den Start
+    # ausgeben - PIMCORE lässt Enddatum und -uhrzeit dann leer.
     termin2 = _parse_date(termin2, label_end)
-    if termin2 is None:
-        print(f'WARNING: Feld "{label_end}" enthält kein gültiges Datum, verwende "{label_start}" auch als Ende.')
-        ende = start
-    else:
-        ende = termin2.strftime("%Y-%m-%d")
-    return f"[dates]{start} 00:00:00 bis {ende} 23:59:59"
+    if termin2 is None or termin2.date() == termin1.date():
+        return f"[dates]{start}"
+    return f'[dates]{start} bis {termin2.strftime("%Y-%m-%d")} 00:00:00'
 
 
 def get_date(termin1, label="Datum"):
@@ -185,15 +184,14 @@ def get_dates_with_time(datum, zeit_str, label="Termin (Datum)"):
         print(f'ERROR: Feld "{label}" enthält kein gültiges Datum, "Termine" bleibt leer.')
         return ""
     zeit_str = _clean(zeit_str).strip()
-    try:
-        stunde, minute = (int(teil) for teil in zeit_str.split(":")[:2])
-    except ValueError:
-        print(f'WARNING: Konnte aus "{zeit_str}" keine Uhrzeit lesen, verwende 00:00.')
-        stunde, minute = 0, 0
-    tag = datum.strftime("%Y-%m-%d")
-    start = f"{tag} {stunde:02d}:{minute:02d}:00"
-    ende = f"{tag} 23:59:59"
-    return f"[dates]{start} bis {ende}"
+    stunde, minute = 0, 0
+    if zeit_str:
+        try:
+            stunde, minute = (int(teil) for teil in zeit_str.split(":")[:2])
+        except ValueError:
+            print(f'WARNING: Konnte aus "{zeit_str}" keine Uhrzeit lesen, verwende 00:00.')
+    # Nur der Start - PIMCORE lässt Enddatum und -uhrzeit dann leer.
+    return f'[dates]{datum.strftime("%Y-%m-%d")} {stunde:02d}:{minute:02d}:00'
 
 
 def get_leaders(text, tourenfuehrer):
