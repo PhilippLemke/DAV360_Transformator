@@ -59,6 +59,32 @@ python transformator.py veranstaltungen --variante gruppen dummy_daten/gruppen_b
 
 Die erzeugten Dateien landen automatisch im Ordner 📂 `export`.
 
+## Lokale Personen-Datei (Tourenführer:innen)
+
+`mapping.yaml` enthält nur Platzhalter-Personen. Die echten Tourenführer:innen kommen in eine eigene Datei
+`mapping_lokal.yaml` direkt im Transformator-Ordner. Git ignoriert diese Datei (siehe `.gitignore`), sie wird also
+nicht ins Repo übertragen und `git pull` funktioniert weiterhin.
+
+Aufbau (gleiche Struktur wie die Tabelle `tourenfuehrer` in `mapping.yaml`):
+
+```yaml
+tourenfuehrer:
+  Vorname Nachname:
+    id: 1234567
+    fullpath: "/264 - Sektion Trier/Personen/Personen/Vorname Nachname"
+    first_name: Vorname
+    last_name: Nachname
+```
+
+Aufruf mit der Datei:
+
+```bash
+python transformator.py touren --variante tr <eingabedatei.xlsx> --zusatz-mapping mapping_lokal.yaml
+```
+
+Wichtig: Die Datei muss genau `mapping_lokal.yaml` heißen, sonst zeigt `git status` sie als neue Datei an. Alternativ
+kann sie auch außerhalb des Ordners liegen, dann den vollständigen Pfad bei `--zusatz-mapping` angeben.
+
 # Konfiguration
 
 - `mapping.yaml` - sektionsspezifische Stammdaten (Kategorien, Tourenführer, Gruppen, Pimcore-IDs). **Muss pro Sektion angepasst werden.**
