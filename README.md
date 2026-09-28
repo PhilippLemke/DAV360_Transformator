@@ -92,8 +92,6 @@ kann sie auch außerhalb des Ordners liegen, dann den vollständigen Pfad bei `-
 - `profiles.yaml` - Spalten-Zuordnung je Typ/Variante
 
 # Hinweise
-- Es waren bei einem Import ID-Pfade doppelt, daher konnte es nicht importiert werden.
-- Beim Import durch DAV des Winterprogramms kam es 2024 zu einem Fehler, dass die Uhrzeiten um 1h falsch waren, vermutlich weil in dem Zeitbereich die Uhrumstellung war, 2025 habe ich darauf hingewiesen und es hat alles gepasst.
 - Der Typ `kurse` (Variante `tr`, DAV-Trier Kurs-Eingabeformular) deckt noch nicht alle Zielfelder ab: `locations` (Pimcore-Objekt für den Veranstaltungsort) bleibt bewusst leer, der Veranstaltungsort landet als Freitext in `destination`. Betroffene Zeilen/Felder werden beim Ausführen mit `WARNING`/`ERROR` markiert, der Import selbst läuft aber durch.
 - Bei Touren und Kursen (Variante `tr`) wird `assignedGroups` aus der Kategorie abgeleitet (`mapping.yaml`, `kategorie.*.gruppe`); die Formularspalte "Gruppen" wird nicht mehr gelesen. Kategorien ohne feste Gruppe (z.B. Ski) bleiben leer.
 - `bookingState` wird bei Touren und Kursen (Variante `tr`) auf "wenige frei" gesetzt, wenn die *maximale* Teilnehmerzahl höchstens 10 beträgt. Sonst bleibt das Feld leer und wird weiterhin in Pimcore gepflegt.
