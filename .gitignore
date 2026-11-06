@@ -5,6 +5,13 @@ pimcore_exports
 # Imports
 formular_imports
 
+# Eigene Eingabedateien im Hauptordner
+/*.xlsx
+
+# In dummy_daten nur die Beispiele versionieren
+dummy_daten/*
+!dummy_daten/*_beispiel.xlsx
+
 # Tempfolder
 tmp
 
