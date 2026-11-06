@@ -169,3 +169,23 @@ def test_header_zeigt_version(capsys):
     ausgabe = capsys.readouterr().out
     assert ausgabe.startswith("=== DAV360 Transformator ")
     assert "unbekannt" not in ausgabe
+
+
+@pytest.mark.parametrize(
+    "mitglieder,nichtmitglieder,expected",
+    [
+        (60, 120, "<ul><li>Mitglieder 60 €</li><li>Nichtmitglieder 120 €</li></ul>"),
+        (60.0, "120", "<ul><li>Mitglieder 60 €</li><li>Nichtmitglieder 120 €</li></ul>"),
+        (12.5, "15 €", "<ul><li>Mitglieder 12,50 €</li><li>Nichtmitglieder 15 €</li></ul>"),
+        (60, float("nan"), "<ul><li>Mitglieder 60 €</li></ul>"),
+        (None, "", ""),
+    ],
+)
+def test_preise_mitglieder_und_nichtmitglieder(mitglieder, nichtmitglieder, expected):
+    assert tf.get_preise(mitglieder, nichtmitglieder) == expected
+
+
+def test_preise_mit_hinweistext():
+    assert tf.get_preise(50, 100, "Satz 1.\nSatz 2.") == (
+        "<ul><li>Mitglieder 50 €</li><li>Nichtmitglieder 100 €</li></ul><p>Satz 1.<br />Satz 2.</p>"
+    )

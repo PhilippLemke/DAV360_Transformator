@@ -292,9 +292,9 @@ kurse:
       fields:
         # Titel/Systemname abgesprochen mit der Sektion Trier:
         # Titel = "<Buchungscode> <Formular-Titel>", Systemname = "<Jahr> <Buchungscode> <Formular-Titel>".
-        key: {transform: key_buchungscode, buchungscode: "Lfd.-Nr.", title: "Bezeichnung/Titel", date: "Termin (Start)"}
-        bookingCode: {transform: direct, source: "Lfd.-Nr."}
-        title: {transform: title_buchungscode, buchungscode: "Lfd.-Nr.", title: "Bezeichnung/Titel"}
+        key: {transform: key_buchungscode, buchungscode: "Kursnummer", title: "Bezeichnung/Titel", date: "Termin (Start)"}
+        bookingCode: {transform: direct, source: "Kursnummer"}
+        title: {transform: title_buchungscode, buchungscode: "Kursnummer", title: "Bezeichnung/Titel"}
         category: {transform: lookup, table: kategorie, source: "Kategorie"}
         level: {transform: lookup, table: kursstufe, source: "Kursstufe"}
         description: {transform: html, source: "Beschreibung"}
@@ -312,11 +312,13 @@ kurse:
         requirements: {transform: html, source: "Voraussetzungen"}
         maxNumberOfParticipants: {transform: max_participants, source: "max. Zahl der Teilnehmenden"}
         bookingState: {transform: booking_state, source: "max. Zahl der Teilnehmenden", threshold: 10, status: "wenige frei"}
+        # Formular-Spalten "Kostenbeitrag Mitglieder/Nichtmitglieder" (Vorlage des
+        # Ausbildungsreferats der Sektion Trier) -> Aufzählung + fester Hinweistext.
         prices:
-          transform: template
-          sources: ["Preis"]
-          template: "Mitglieder: {{Preis}}\nDie Kosten für Anreise, Unterkunft und Verpflegung muss jeder Teilnehmer selbst tragen. Die Teilnehmer eines außerhalb der Region stattfindenden Ausbildungskurses oder einer Ausbildungstour ermöglichen dem Kursleiter bzw. weiteren Ausbildern eine kostenfreie An- und Abreise. Einzelheiten sind mit dem Kursleiter zu klären."
-          wrap: html
+          transform: preise
+          mitglieder: "Kostenbeitrag Mitglieder"
+          nichtmitglieder: "Kostenbeitrag Nichtmitglieder"
+          text: "Die Kosten für Anreise, Unterkunft und Verpflegung muss jeder Teilnehmer selbst tragen.\nDie Teilnehmer eines außerhalb der Region stattfindenden Ausbildungskurses oder einer Ausbildungstour ermöglichen dem Kursleiter bzw. weiteren Ausbildern eine kostenfreie An- und Abreise. Einzelheiten sind mit dem Kursleiter zu klären."
         previewDiscussion: {transform: html, source: "Vorbesprechung"}
         registerEnd: {transform: date, source: "Anmeldeschluss"}
         registration: {transform: html, source: "Bemerkungen"}

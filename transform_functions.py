@@ -14,7 +14,7 @@ import pandas
 # (sondern ein Literal, eine Tabellenreferenz o.ä.). Alles andere in einer
 # Feld-Spec wird als benötigte Eingabespalte gewertet, siehe
 # required_columns_for_field().
-NON_COLUMN_SPEC_KEYS = {"transform", "value", "table", "wrap", "template", "mandatory", "label", "prefix", "threshold", "status"}
+NON_COLUMN_SPEC_KEYS = {"transform", "value", "table", "wrap", "template", "mandatory", "label", "prefix", "threshold", "status", "text"}
 
 
 def required_columns_for_field(spec):
@@ -340,6 +340,32 @@ def render_template(template, sources, row):
     return rendered
 
 
+def _format_preis(value):
+    """Formatiert einen Preis aus dem Formular als "60 €" bzw. "12,50 €"."""
+    if isinstance(value, (int, float)) and not isinstance(value, bool):
+        if value != value:  # NaN
+            return ""
+        if float(value).is_integer():
+            return f"{int(value)} €"
+        return f"{value:.2f} €".replace(".", ",")
+    text = _clean(value).strip()
+    if not text:
+        return ""
+    return text if "€" in text else f"{text} €"
+
+
+def get_preise(mitglieder, nichtmitglieder, text=""):
+    """Preise als Aufzählung (Mitglieder/Nichtmitglieder), danach der feste Hinweistext."""
+    eintraege = [
+        f"<li>{gruppe} {preis}</li>"
+        for gruppe, preis in (("Mitglieder", _format_preis(mitglieder)),
+                              ("Nichtmitglieder", _format_preis(nichtmitglieder)))
+        if preis
+    ]
+    liste = f"<ul>{''.join(eintraege)}</ul>" if eintraege else ""
+    return liste + make_html(text)
+
+
 def dispatch(spec, row, mapping, season_ctx):
     """Wertet eine einzelne Feld-Transformation aus profiles.yaml für eine Zeile aus."""
     transform = spec["transform"]
@@ -419,6 +445,9 @@ def dispatch(spec, row, mapping, season_ctx):
 
     if transform == "season_id":
         return lookup_id(mapping, "saison", season_ctx.season_name)
+
+    if transform == "preise":
+        return get_preise(row.get(spec["mitglieder"]), row.get(spec["nichtmitglieder"]), spec.get("text", ""))
 
     if transform == "template":
         rendered = render_template(spec["template"], spec["sources"], row)
