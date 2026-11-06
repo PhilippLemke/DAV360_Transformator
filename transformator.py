@@ -171,6 +171,8 @@ def check_required_columns(input_file, typ, variante, data_in, variant_spec):
 
 def transform_input(input_file, typ, variante, typ_spec, variant_spec, mapping, season_ctx):
     data_in = pandas.read_excel(input_file).reset_index()
+    # Leerzeichen am Rand der Spaltenüberschriften (z.B. "Kostenbeitrag Mitglieder ") ignorieren
+    data_in.columns = [c.strip() if isinstance(c, str) else c for c in data_in.columns]
     check_required_columns(input_file, typ, variante, data_in, variant_spec)
 
     workbook = openpyxl.Workbook()
