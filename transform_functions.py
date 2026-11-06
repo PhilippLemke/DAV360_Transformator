@@ -210,7 +210,8 @@ def get_leaders(text, tourenfuehrer):
             continue
         entry = tourenfuehrer.get(name)
         if entry is None:
-            print(f'ERROR: Tourenführer "{name}" ist nicht in mapping.yaml (tourenfuehrer) bekannt.')
+            print(f'ERROR: Tourenführer "{name}" ist weder in mapping.yaml noch in der '
+                  f'--zusatz-mapping-Datei (tourenfuehrer) bekannt.')
         else:
             fullpaths.append(entry["fullpath"])
     return ",".join(fullpaths)
