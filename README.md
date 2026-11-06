@@ -29,6 +29,24 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
+
+# Aktualisieren
+
+Windows: `aktualisieren.bat` im Transformator-Ordner starten (Doppelklick oder in der Eingabeaufforderung).
+Das Skript setzt zuerst die Beispieldateien in 📂 `dummy_daten` zurück und holt dann mit `git pull` die neueste
+Version. So scheitert das Update nicht an Beispieldateien, die Excel beim Öffnen gespeichert hat.
+
+Linux / Mac:
+```bash
+git checkout -- dummy_daten
+git pull
+```
+
+Eigene Eingabeformulare (`.xlsx`) im Hauptordner und eigene Dateien in `dummy_daten` ignoriert git, sie bleiben beim
+Aktualisieren erhalten. Alternativ den Ordner 📂 `formular_imports` für die Eingabeformulare verwenden.
+
+Welche Version gerade läuft, zeigt der Transformator beim Start in der ersten Zeile an.
+
 # Transformator ausführen
 
 ```bash
