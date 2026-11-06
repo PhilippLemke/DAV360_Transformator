@@ -156,10 +156,17 @@ def _parse_date(value, label="Datum"):
     return None
 
 
+def _datum_fehlt(roh):
+    """Meldungstext für ein fehlendes Datum: leeres Feld oder ungültiger Inhalt."""
+    leer = roh is None or (not isinstance(roh, str) and pandas.isna(roh)) or not str(roh).strip()
+    return "ist leer" if leer else "enthält kein gültiges Datum"
+
+
 def get_dates(termin1, termin2, label_start="Termin (Start)", label_end="Termin (Ende)"):
+    termin1_roh = termin1
     termin1 = _parse_date(termin1, label_start)
     if termin1 is None:
-        print(f'ERROR: Feld "{label_start}" enthält kein gültiges Datum, "Termine" bleibt leer.')
+        print(f'ERROR: Feld "{label_start}" {_datum_fehlt(termin1_roh)}, "Termine" bleibt leer.')
         return ""
     start = f'{termin1.strftime("%Y-%m-%d")} 00:00:00'
     # Ohne (gültiges) Ende bzw. bei eintägigen Terminen nur den Start
@@ -171,17 +178,19 @@ def get_dates(termin1, termin2, label_start="Termin (Start)", label_end="Termin 
 
 
 def get_date(termin1, label="Datum"):
+    termin1_roh = termin1
     termin1 = _parse_date(termin1, label)
     if termin1 is None:
-        print(f'WARNING: Feld "{label}" enthält kein gültiges Datum, verwende leeren Wert.')
+        print(f'WARNING: Feld "{label}" {_datum_fehlt(termin1_roh)}, verwende leeren Wert.')
         return ""
     return termin1.strftime("%Y-%m-%d")
 
 
 def get_dates_with_time(datum, zeit_str, label="Termin (Datum)"):
+    datum_roh = datum
     datum = _parse_date(datum, label)
     if datum is None:
-        print(f'ERROR: Feld "{label}" enthält kein gültiges Datum, "Termine" bleibt leer.')
+        print(f'ERROR: Feld "{label}" {_datum_fehlt(datum_roh)}, "Termine" bleibt leer.')
         return ""
     zeit_str = _clean(zeit_str).strip()
     stunde, minute = 0, 0
@@ -251,9 +260,10 @@ def get_kategorie_gruppe_fullpath(mapping, kategorie_name):
 def get_key(mapping, titel, kategorie_name, datum, label="Datum"):
     titel_clean = _strip_parentheses_and_spaces(titel)
     short_code = get_kategorie_short_code(mapping, kategorie_name)
+    datum_roh = datum
     datum = _parse_date(datum, label)
     if datum is None:
-        print(f'ERROR: Feld "{label}" enthält kein gültiges Datum, "key" ist unvollständig.')
+        print(f'ERROR: Feld "{label}" {_datum_fehlt(datum_roh)}, "key" ist unvollständig.')
         return short_code + titel_clean
     return datum.strftime("%y%m") + short_code + titel_clean
 
@@ -289,9 +299,10 @@ def get_key_buchungscode(buchungscode, titel, datum, label="Datum"):
     (z.B. "26 K14-26 Venediger Gruppe"), abgesprochen mit der Sektion Trier."""
     buchungscode = _clean(buchungscode).strip()
     titel = _clean(titel).strip()
+    datum_roh = datum
     datum = _parse_date(datum, label)
     if datum is None:
-        print(f'ERROR: Feld "{label}" enthält kein gültiges Datum, "key" ist unvollständig.')
+        print(f'ERROR: Feld "{label}" {_datum_fehlt(datum_roh)}, "key" ist unvollständig.')
         return " ".join(teil for teil in (buchungscode, titel) if teil)
     jahr = datum.strftime("%y")
     return " ".join(teil for teil in (jahr, buchungscode, titel) if teil)
@@ -302,9 +313,10 @@ def get_key_veranstaltung_gruppe(gruppe_name, titel, datum, label="Datum"):
     (z.B. "26 Familienwanderung 0918 Familienwochenende Manderscheid"), abgesprochen mit der Sektion Trier."""
     gruppe_name = _clean(gruppe_name).strip()
     titel = _clean(titel).strip()
+    datum_roh = datum
     datum = _parse_date(datum, label)
     if datum is None:
-        print(f'ERROR: Feld "{label}" enthält kein gültiges Datum, "key" ist unvollständig.')
+        print(f'ERROR: Feld "{label}" {_datum_fehlt(datum_roh)}, "key" ist unvollständig.')
         return " ".join(teil for teil in (gruppe_name, titel) if teil)
     jahr = datum.strftime("%y")
     monat_tag = datum.strftime("%m%d")
@@ -314,9 +326,10 @@ def get_key_veranstaltung_gruppe(gruppe_name, titel, datum, label="Datum"):
 def get_key_groups(mapping, titel, gruppe_name, datum, label="Datum"):
     titel_clean = _strip_parentheses_and_spaces(titel)
     short_code = get_group_short_code(mapping, gruppe_name)
+    datum_roh = datum
     datum = _parse_date(datum, label)
     if datum is None:
-        print(f'ERROR: Feld "{label}" enthält kein gültiges Datum, "key" ist unvollständig.')
+        print(f'ERROR: Feld "{label}" {_datum_fehlt(datum_roh)}, "key" ist unvollständig.')
         return short_code + titel_clean
     return short_code + datum.strftime("%y%m") + titel_clean
 

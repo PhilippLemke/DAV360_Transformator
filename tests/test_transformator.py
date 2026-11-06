@@ -189,3 +189,17 @@ def test_preise_mit_hinweistext():
     assert tf.get_preise(50, 100, "Satz 1.\nSatz 2.") == (
         "<ul><li>Mitglieder 50 €</li><li>Nichtmitglieder 100 €</li></ul><p>Satz 1.<br />Satz 2.</p>"
     )
+
+
+@pytest.mark.parametrize(
+    "roh,meldung",
+    [
+        (None, 'Feld "Anmeldeschluss" ist leer, verwende leeren Wert.'),
+        (float("nan"), 'Feld "Anmeldeschluss" ist leer, verwende leeren Wert.'),
+        ("  ", 'Feld "Anmeldeschluss" ist leer, verwende leeren Wert.'),
+        ("bald", 'Feld "Anmeldeschluss" enthält kein gültiges Datum, verwende leeren Wert.'),
+    ],
+)
+def test_datum_meldung_unterscheidet_leer_und_ungueltig(roh, meldung, capsys):
+    assert tf.get_date(roh, "Anmeldeschluss") == ""
+    assert meldung in capsys.readouterr().out
