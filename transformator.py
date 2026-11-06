@@ -32,7 +32,28 @@ def load_yaml(path):
         print(f"ERROR: Konfigurationsdatei {path} fehlt! -> Abbruch")
         sys.exit(1)
     with open(path, "r", encoding="utf-8") as f:
-        return yaml.safe_load(f)
+        text = f.read()
+    tab_zeilen = [nr for nr, zeile in enumerate(text.splitlines(), start=1) if "\t" in zeile]
+    if tab_zeilen:
+        print(f"ERROR: {path} enthält Tabulatoren in Zeile {_zeilen_liste(tab_zeilen)}.")
+        print("       YAML erlaubt zum Einrücken nur Leerzeichen. Bitte die Tabs durch "
+              "Leerzeichen ersetzen -> Abbruch")
+        sys.exit(1)
+    try:
+        return yaml.safe_load(text)
+    except yaml.YAMLError as e:
+        stelle = getattr(e, "problem_mark", None)
+        ort = f" in Zeile {stelle.line + 1}, Spalte {stelle.column + 1}" if stelle else ""
+        grund = getattr(e, "problem", None) or str(e)
+        print(f"ERROR: {path} ist fehlerhaft{ort}: {grund} -> Abbruch")
+        sys.exit(1)
+
+
+def _zeilen_liste(zeilen, maximal=10):
+    text = ", ".join(str(nr) for nr in zeilen[:maximal])
+    if len(zeilen) > maximal:
+        text += f" (und {len(zeilen) - maximal} weiteren)"
+    return text
 
 
 def load_mapping_data(path, extra_path=None):

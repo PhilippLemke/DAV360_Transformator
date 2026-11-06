@@ -131,3 +131,21 @@ def test_termine_ohne_ende_nur_mit_start(start, ende, expected):
 ])
 def test_termin_mit_uhrzeit_ohne_ende(zeit, expected):
     assert tf.get_dates_with_time("12.06.2026", zeit) == expected
+
+
+def test_yaml_mit_tabs_bricht_mit_zeilenangabe_ab(tmp_path, capsys):
+    datei = tmp_path / "mapping_lokal.yaml"
+    datei.write_text("tourenfuehrer:\n  Name:\n\tid: 1\n\tfirst_name: X\n", encoding="utf-8")
+    with pytest.raises(SystemExit) as exit_info:
+        transformator.load_yaml(str(datei))
+    assert exit_info.value.code == 1
+    assert "Tabulatoren in Zeile 3, 4" in capsys.readouterr().out
+
+
+def test_fehlerhafte_yaml_bricht_ohne_stacktrace_ab(tmp_path, capsys):
+    datei = tmp_path / "mapping_lokal.yaml"
+    datei.write_text("tourenfuehrer:\n  Name:\n    id: @1\n", encoding="utf-8")
+    with pytest.raises(SystemExit) as exit_info:
+        transformator.load_yaml(str(datei))
+    assert exit_info.value.code == 1
+    assert "fehlerhaft in Zeile 3, Spalte 9" in capsys.readouterr().out
