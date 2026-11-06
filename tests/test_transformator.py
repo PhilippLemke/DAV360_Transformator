@@ -162,3 +162,10 @@ def test_yaml_mit_geschwungenen_anfuehrungszeichen_bricht_ab(tmp_path, capsys):
         transformator.load_yaml(str(datei))
     assert exit_info.value.code == 1
     assert "geschwungene Anführungszeichen (“ ” „) in Zeile 4." in capsys.readouterr().out
+
+
+def test_header_zeigt_version(capsys):
+    transformator.print_header()
+    ausgabe = capsys.readouterr().out
+    assert ausgabe.startswith("=== DAV360 Transformator ")
+    assert "unbekannt" not in ausgabe

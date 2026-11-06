@@ -16,6 +16,7 @@
 
 import argparse
 import os
+import subprocess
 import sys
 from dataclasses import dataclass
 from datetime import datetime
@@ -25,6 +26,24 @@ import pandas
 import yaml
 
 import transform_functions as tf
+
+
+def get_version():
+    """Version aus git ermitteln, z.B. "v2.6.1" oder "v2.6.1-2-gabc1234" bei
+    Commits nach dem letzten Tag ("-dirty" = lokale Änderungen)."""
+    try:
+        ergebnis = subprocess.run(
+            ["git", "describe", "--tags", "--always", "--dirty"],
+            cwd=os.path.dirname(os.path.abspath(__file__)),
+            capture_output=True, text=True, timeout=5,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return "unbekannt"
+    return ergebnis.stdout.strip() if ergebnis.returncode == 0 else "unbekannt"
+
+
+def print_header():
+    print(f"=== DAV360 Transformator {get_version()} ===")
 
 
 def load_yaml(path):
@@ -236,6 +255,7 @@ def parse_args(argv=None):
 
 def main(argv=None):
     args = parse_args(argv)
+    print_header()
     config = load_yaml("config.yaml")
     profiles = load_yaml(config.get("profiles_file", "profiles.yaml"))
     mapping = Mapping(load_mapping_data(config.get("mapping_file", "mapping.yaml"), args.zusatz_mapping))
