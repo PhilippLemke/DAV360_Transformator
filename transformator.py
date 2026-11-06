@@ -33,11 +33,23 @@ def load_yaml(path):
         sys.exit(1)
     with open(path, "r", encoding="utf-8") as f:
         text = f.read()
-    tab_zeilen = [nr for nr, zeile in enumerate(text.splitlines(), start=1) if "\t" in zeile]
+    zeilen = text.splitlines()
+    tab_zeilen = [nr for nr, zeile in enumerate(zeilen, start=1) if "\t" in zeile]
     if tab_zeilen:
         print(f"ERROR: {path} enthält Tabulatoren in Zeile {_zeilen_liste(tab_zeilen)}.")
         print("       YAML erlaubt zum Einrücken nur Leerzeichen. Bitte die Tabs durch "
               "Leerzeichen ersetzen -> Abbruch")
+        sys.exit(1)
+    # Geschwungene Anführungszeichen (z.B. von Word/Autokorrektur) sind gültiges YAML,
+    # landen aber unbemerkt im Wert (z.B. im fullpath) - Kommentarzeilen sind egal.
+    zitat_zeilen = [
+        nr for nr, zeile in enumerate(zeilen, start=1)
+        if not zeile.lstrip().startswith("#") and any(z in zeile for z in "“”„")
+    ]
+    if zitat_zeilen:
+        print(f"ERROR: {path} enthält geschwungene Anführungszeichen (“ ” „) in Zeile "
+              f"{_zeilen_liste(zitat_zeilen)}.")
+        print('       Bitte durch normale gerade Anführungszeichen (") ersetzen -> Abbruch')
         sys.exit(1)
     try:
         return yaml.safe_load(text)

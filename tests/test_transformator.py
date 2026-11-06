@@ -149,3 +149,16 @@ def test_fehlerhafte_yaml_bricht_ohne_stacktrace_ab(tmp_path, capsys):
         transformator.load_yaml(str(datei))
     assert exit_info.value.code == 1
     assert "fehlerhaft in Zeile 3, Spalte 9" in capsys.readouterr().out
+
+
+def test_yaml_mit_geschwungenen_anfuehrungszeichen_bricht_ab(tmp_path, capsys):
+    datei = tmp_path / "mapping_lokal.yaml"
+    datei.write_text(
+        "# Kommentar mit „Zitat“ ist erlaubt\n"
+        "tourenfuehrer:\n  Name:\n    fullpath: “/264/Name“\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(SystemExit) as exit_info:
+        transformator.load_yaml(str(datei))
+    assert exit_info.value.code == 1
+    assert "geschwungene Anführungszeichen (“ ” „) in Zeile 4." in capsys.readouterr().out
